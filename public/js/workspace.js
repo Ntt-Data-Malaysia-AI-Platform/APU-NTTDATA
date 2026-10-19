@@ -89,16 +89,124 @@ function widgetBody(w) {
           <li><label><input type="checkbox" data-check="${i}"${c.done ? " checked" : ""} /><span class="box">${icon("check")}</span><span>${e(c.text)}</span></label></li>`,
         )
         .join("")}</ul>`;
+    case "donut":
+      return donut(w);
+    case "columns":
+      return columns(w);
+    case "stepper":
+      return `${w.subtitle ? `<p class="w-sub">${e(w.subtitle)}</p>` : ""}<ol class="stepper">${w.steps
+        .map(
+          (s, i) => `
+          <li class="step ${e(s.status)}">
+            <span class="step-dot">${s.status === "done" ? icon("check") : i + 1}</span>
+            <span class="step-text"><b>${e(s.label)}</b>${s.meta ? `<small>${e(s.meta)}</small>` : ""}</span>
+            ${s.status === "current" ? '<span class="pill">In progress</span>' : ""}
+          </li>`,
+        )
+        .join("")}</ol>`;
+    case "kanban":
+      return `<div class="kanban">${w.columns
+        .map(
+          (c) => `
+          <div class="kb-col tone-${e(c.tone)}">
+            <div class="kb-head"><span class="kb-dot"></span><b>${e(c.title)}</b><span class="pill">${c.cards.length}</span></div>
+            ${c.cards.length ? c.cards.map((k) => `<div class="kb-card"><b>${e(k.title)}</b>${k.meta ? `<small>${e(k.meta)}</small>` : ""}</div>`).join("") : '<div class="kb-empty">Nothing here</div>'}
+          </div>`,
+        )
+        .join("")}</div>`;
+    case "week":
+      return week(w);
     default:
       return "";
   }
 }
 
-function widget(w) {
-  const wide = w.type === "cards" ? " wide" : "";
+// Donut chart: SVG presentation attributes only (no inline styles, per the CSP).
+function donut(w) {
+  const total = w.segments.reduce((n, s) => n + s.value, 0) || 1;
+  const r = 54;
+  const C = 2 * Math.PI * r;
+  const gap = w.segments.length > 1 ? 2 : 0;
+  let acc = 0;
+  const arcs = w.segments
+    .map((s, i) => {
+      const len = (s.value / total) * C;
+      const arc = `<circle class="seg seg-${i}" cx="70" cy="70" r="${r}" fill="none" stroke-width="18" stroke-dasharray="${Math.max(len - gap, 0.01)} ${C}" stroke-dashoffset="${-acc}" transform="rotate(-90 70 70)"/>`;
+      acc += len;
+      return arc;
+    })
+    .join("");
   return `
-    <section class="widget${wide}">
-      <header class="w-head"><span class="w-icon">${icon(w.icon)}</span><h3>${e(w.title)}</h3></header>
+    <div class="donut-wrap">
+      <div class="donut">
+        <svg viewBox="0 0 140 140" role="img" aria-label="${e(w.title)}"><circle class="seg-track" cx="70" cy="70" r="${r}" fill="none" stroke-width="18"/>${arcs}</svg>
+        <div class="donut-center"><b>${e(w.centerValue)}</b><small>${e(w.centerLabel)}</small></div>
+      </div>
+      <ul class="legend">${w.segments
+        .map((s, i) => `<li><span class="sw seg-${i}"></span><span class="lg-label">${e(s.label)}</span><b>${e(s.display)}</b></li>`)
+        .join("")}</ul>
+    </div>
+    ${w.note ? `<p class="w-note">${e(w.note)}</p>` : ""}`;
+}
+
+function columns(w) {
+  const max = w.max ?? Math.max(...w.items.map((i) => i.value)) * 1.15;
+  return `
+    <div class="cols">${w.items
+      .map(
+        (c) => `
+        <div class="col${c.highlight ? " hl" : ""}">
+          <span class="col-val">${e(c.display ?? `${c.value}${w.unit ?? ""}`)}</span>
+          <div class="col-track"><span class="col-bar" data-height="${e(Math.round((c.value / max) * 100))}"></span></div>
+          <span class="col-label">${e(c.label)}</span>
+        </div>`,
+      )
+      .join("")}</div>
+    ${w.note ? `<p class="w-note">${e(w.note)}</p>` : ""}`;
+}
+
+const WEEK_START = 8;
+const WEEK_END = 18;
+function week(w) {
+  const days = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+  const today = (new Date().getDay() + 6) % 7; // 0 = Monday
+  const hours = [];
+  for (let h = WEEK_START; h < WEEK_END; h += 2) hours.push(`<span>${String(h).padStart(2, "0")}:00</span>`);
+  return `
+    <div class="week">
+      <div class="wk-times"><span></span>${hours.join("")}</div>
+      ${days
+        .map(
+          (d, i) => `
+        <div class="wk-day${i === today ? " today" : ""}">
+          <div class="wk-head">${d}</div>
+          <div class="wk-body">
+            ${w.events
+              .filter((ev) => ev.day === i)
+              .map(
+                (ev) => `
+              <div class="wk-event tone-${e(ev.tone ?? "info")}" data-top="${e(((ev.start - WEEK_START) / (WEEK_END - WEEK_START)) * 100)}" data-height="${e(((ev.end - ev.start) / (WEEK_END - WEEK_START)) * 100)}">
+                <b>${e(ev.title)}</b><small>${e(ev.meta)}</small>
+              </div>`,
+              )
+              .join("")}
+          </div>
+        </div>`,
+        )
+        .join("")}
+    </div>`;
+}
+
+const WIDE = new Set(["cards", "week", "kanban"]);
+
+function widget(w) {
+  const wide = WIDE.has(w.type) ? " wide" : "";
+  return `
+    <section class="widget w-${e(w.type)}${wide}">
+      <header class="w-head">
+        <span class="w-icon">${icon(w.icon)}</span><h3>${e(w.title)}</h3>
+        ${w.ask ? `<button type="button" class="w-ask" data-ask="${e(w.ask)}">${icon("sparkle")} Ask AI</button>` : ""}
+      </header>
       ${widgetBody(w)}
     </section>`;
 }
@@ -221,7 +329,8 @@ export async function renderWorkspace(root, persona, ctx) {
   // Delegate "Ask AI" clicks on dashboard items.
   const widgetsEl = root.querySelector("#ws-widgets");
   const onAsk = (ev) => {
-    if (ev.type === "keydown" && ev.key !== "Enter") return;
+    // Buttons already turn Enter into a click; only non-button items need the keydown.
+    if (ev.type === "keydown" && (ev.key !== "Enter" || ev.target.closest("button"))) return;
     const el = ev.target.closest("[data-ask]");
     if (el) ctx.chat.ask(el.dataset.ask);
   };
@@ -241,6 +350,8 @@ export async function renderWorkspace(root, persona, ctx) {
       // Sizes are set through the CSSOM (inline style attributes are blocked by the CSP).
       widgetsEl.querySelectorAll("[data-width]").forEach((el) => (el.style.width = `${Number(el.dataset.width)}%`));
       widgetsEl.querySelectorAll("[data-left]").forEach((el) => (el.style.left = `${Number(el.dataset.left)}%`));
+      widgetsEl.querySelectorAll("[data-height]").forEach((el) => (el.style.height = `${Number(el.dataset.height)}%`));
+      widgetsEl.querySelectorAll("[data-top]").forEach((el) => (el.style.top = `${Number(el.dataset.top)}%`));
     } catch (err) {
       if (ctx.isStale()) return;
       widgetsEl.innerHTML = `<p class="error">Couldn't load your dashboard: ${e(err.message)}</p>`;

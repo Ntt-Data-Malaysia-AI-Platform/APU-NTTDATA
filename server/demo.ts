@@ -43,13 +43,13 @@ export async function runDemo(
   );
   if (trigger) {
     emit({ type: "status", text: TOOL_STATUS[trigger.tool] });
-    await sleep(400);
+    await sleep(150);
     const outcome = runTool(trigger.tool, trigger.input, persona, sources);
-    parts.push(`**Your record** (sample data):\n\n\`\`\`json\n${outcome.content}\n\`\`\``);
+    parts.push(`**Your record** (sample data)\n\n${recordToMarkdown(JSON.parse(outcome.content))}`);
   }
 
   emit({ type: "status", text: TOOL_STATUS.search_apu_knowledge });
-  await sleep(400);
+  await sleep(150);
   const outcome = runTool("search_apu_knowledge", { query: question }, persona, sources);
   if (outcome.sources?.length) {
     emit({ type: "sources", sources: sources.list() });
@@ -63,11 +63,54 @@ export async function runDemo(
     );
   }
 
-  // Stream word by word so the demo feels like the real thing.
+  // Stream a few words at a time so the demo feels like the real thing.
   const words = parts.join("\n\n").split(/(\s+)/);
-  for (const word of words) {
+  for (let i = 0; i < words.length; i += 6) {
     if (signal.aborted) return;
-    emit({ type: "text", text: word });
-    if (word.trim()) await sleep(12);
+    emit({ type: "text", text: words.slice(i, i + 6).join("") });
+    await sleep(14);
   }
+}
+
+// ---------- readable records ----------
+
+const humanize = (key: string) => {
+  const s = key.replace(/([a-z])([A-Z])/g, "$1 $2").toLowerCase();
+  return s.charAt(0).toUpperCase() + s.slice(1);
+};
+
+const cell = (v: unknown): string => {
+  if (v == null) return "–";
+  if (Array.isArray(v)) {
+    return v.every((x) => typeof x !== "object")
+      ? v.join("; ")
+      : v.map((x) => Object.values(x as object).slice(0, 2).join(" ")).join("; ");
+  }
+  return String(v).replace(/\|/g, "/");
+};
+
+/** Turns a demo record into Markdown: scalars as bullets, lists of objects as tables. */
+function recordToMarkdown(record: Record<string, unknown>): string {
+  const lines: string[] = [];
+  const walk = (obj: Record<string, unknown>) => {
+    for (const [key, value] of Object.entries(obj)) {
+      if (key === "note") continue;
+      if (Array.isArray(value)) {
+        if (value.length && typeof value[0] === "object") {
+          const cols = Object.keys(value[0] as object);
+          lines.push("", `**${humanize(key)}**`, "", `| ${cols.map(humanize).join(" | ")} |`, `| ${cols.map(() => "---").join(" | ")} |`);
+          for (const row of value as Record<string, unknown>[]) lines.push(`| ${cols.map((c) => cell(row[c])).join(" | ")} |`);
+          lines.push("");
+        } else {
+          lines.push(`- **${humanize(key)}:** ${value.map(cell).join(", ")}`);
+        }
+      } else if (value && typeof value === "object") {
+        walk(value as Record<string, unknown>);
+      } else {
+        lines.push(`- **${humanize(key)}:** ${cell(value)}`);
+      }
+    }
+  };
+  walk(record);
+  return lines.join("\n").replace(/\n{3,}/g, "\n\n").trim();
 }

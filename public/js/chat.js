@@ -14,9 +14,11 @@ export function createChat(root, { onOpen }) {
         <strong id="as-name">AI Assistant</strong>
         <small><span class="live-dot"></span> Grounded in APU knowledge</small>
       </div>
+      <button type="button" class="icon-btn as-expand" id="as-expand" title="Wider panel" aria-label="Toggle wider assistant panel" aria-pressed="false">${icon("widen")}</button>
       <button type="button" class="icon-btn" id="as-new" title="New conversation" aria-label="New conversation">${icon("refresh")}</button>
       <button type="button" class="icon-btn as-close" id="as-close" title="Close" aria-label="Close assistant">${icon("close")}</button>
     </div>
+    <button type="button" class="as-jump" id="as-jump" hidden>${icon("arrowDown")} Latest</button>
     <div class="as-scroll" id="as-scroll">
       <div class="as-empty" id="as-empty">
         <span class="as-empty-icon">${icon("chat")}</span>
@@ -46,9 +48,13 @@ export function createChat(root, { onOpen }) {
     input: $("as-input"),
     send: $("as-send"),
     stop: $("as-stop"),
+    jump: $("as-jump"),
+    expand: $("as-expand"),
   };
 
-  const state = { persona: null, history: [], controller: null };
+  // `pinned` = the reader is at the bottom, so new text should keep them there.
+  // Scrolling up unpins (we stop following) until they come back down.
+  const state = { persona: null, history: [], controller: null, pinned: true };
 
   // ---------- rendering ----------
 
@@ -70,7 +76,7 @@ export function createChat(root, { onOpen }) {
 
   function addAssistant() {
     const li = document.createElement("li");
-    li.className = "msg assistant";
+    li.className = "msg assistant streaming";
     li.innerHTML = `
       <div class="body">
         <div class="status"><span class="dots"><i></i><i></i><i></i></span><span class="status-text">Thinking</span></div>
@@ -86,6 +92,7 @@ export function createChat(root, { onOpen }) {
       sources: li.querySelector(".sources"),
       text: "",
       pending: false,
+      lastRender: 0,
     };
     const onCite = (ev) => {
       const cite = ev.target.closest(".cite");
@@ -115,20 +122,54 @@ export function createChat(root, { onOpen }) {
       .join("")}`;
   }
 
-  function scheduleRender(view) {
-    if (view.pending) return;
-    view.pending = true;
-    // A short timer rather than requestAnimationFrame, which pauses in background tabs.
-    setTimeout(() => {
-      view.pending = false;
-      view.content.innerHTML = renderMarkdown(view.text);
-      stickToBottom();
-    }, 30);
+  function render(view) {
+    view.pending = false;
+    view.lastRender = Date.now();
+    view.content.innerHTML = renderMarkdown(view.text);
+    stickToBottom();
   }
 
+  // Render at most every ~50 ms while streaming: the first words appear at
+  // once, and long answers don't re-parse on every token. A timer rather than
+  // requestAnimationFrame, which pauses in background tabs.
+  function scheduleRender(view) {
+    if (view.pending) return;
+    const wait = 50 - (Date.now() - view.lastRender);
+    if (wait <= 0) return render(view);
+    view.pending = true;
+    setTimeout(() => render(view), wait);
+  }
+
+  const distanceFromBottom = () => els.scroll.scrollHeight - els.scroll.scrollTop - els.scroll.clientHeight;
+
   function stickToBottom(force = false) {
-    const s = els.scroll;
-    if (force || s.scrollHeight - s.scrollTop - s.clientHeight < 140) s.scrollTop = s.scrollHeight;
+    if (force) state.pinned = true;
+    if (state.pinned) {
+      els.scroll.scrollTop = els.scroll.scrollHeight;
+      els.jump.hidden = true;
+    } else if (distanceFromBottom() > 40) {
+      els.jump.hidden = false; // new content below where the reader is looking
+    }
+  }
+
+  function addActions(view) {
+    const bar = document.createElement("div");
+    bar.className = "msg-actions";
+    const copy = document.createElement("button");
+    copy.type = "button";
+    copy.className = "msg-action";
+    copy.innerHTML = `${icon("copy")}<span>Copy</span>`;
+    copy.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(view.text);
+        copy.querySelector("span").textContent = "Copied";
+      } catch {
+        copy.querySelector("span").textContent = "Copy failed";
+      }
+      setTimeout(() => (copy.querySelector("span").textContent = "Copy"), 1500);
+    });
+    bar.append(copy);
+    view.li.querySelector(".body").append(bar);
   }
 
   function showError(view, message) {
@@ -196,6 +237,10 @@ export function createChat(root, { onOpen }) {
       }
     } finally {
       view.status.remove();
+      if (view.pending || view.text) render(view); // flush the last tokens
+      view.li.classList.remove("streaming");
+      if (view.text.trim()) addActions(view);
+      stickToBottom();
       if (state.controller === controller) {
         if (view.text.trim()) state.history.push({ role: "assistant", content: view.text });
         else {
@@ -212,8 +257,11 @@ export function createChat(root, { onOpen }) {
     state.controller?.abort();
     state.controller = null;
     state.history = [];
+    state.pinned = true;
     els.thread.replaceChildren();
     els.empty.hidden = false;
+    els.jump.hidden = true;
+    els.scroll.scrollTop = 0;
     setBusy(false);
   }
 
@@ -251,6 +299,40 @@ export function createChat(root, { onOpen }) {
   });
   els.stop.addEventListener("click", () => state.controller?.abort());
   $("as-new").addEventListener("click", reset);
+
+  // Follow new text only while the reader is at the bottom.
+  els.scroll.addEventListener(
+    "scroll",
+    () => {
+      state.pinned = distanceFromBottom() < 60;
+      if (state.pinned) els.jump.hidden = true;
+    },
+    { passive: true },
+  );
+  els.jump.addEventListener("click", () => {
+    state.pinned = true;
+    els.scroll.scrollTop = els.scroll.scrollHeight;
+    els.jump.hidden = true;
+  });
+
+  // Esc stops an answer that is still streaming.
+  root.addEventListener("keydown", (ev) => {
+    if (ev.key === "Escape" && state.controller) {
+      ev.stopPropagation();
+      state.controller.abort();
+    }
+  });
+
+  // Wider panel on desktop, remembered per browser.
+  const WIDE_KEY = "apu-genai-wide-assistant";
+  const setWide = (wide) => {
+    document.body.classList.toggle("assistant-wide", wide);
+    els.expand.setAttribute("aria-pressed", String(wide));
+    els.expand.title = wide ? "Narrower panel" : "Wider panel";
+    try { localStorage.setItem(WIDE_KEY, wide ? "1" : "0"); } catch { /* storage unavailable */ }
+  };
+  try { setWide(localStorage.getItem(WIDE_KEY) === "1"); } catch { /* storage unavailable */ }
+  els.expand.addEventListener("click", () => setWide(!document.body.classList.contains("assistant-wide")));
 
   return {
     ask,
