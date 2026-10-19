@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>APU GenAI Platform</title>
+    <meta name="description" content="APU's GenAI platform: personal workspaces with dashboards, AI tools and an assistant for prospective students, students, lecturers, staff and researchers. Delivered by NTT DATA." />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="js/main.js"></script>
+  </head>
+  <body data-persona="platform" data-view="boot">
+    <!-- Decorative colour backdrop -->
+    <div class="backdrop" aria-hidden="true">
+      <span class="blob b1"></span>
+      <span class="blob b2"></span>
+      <span class="blob b3"></span>
+      <span class="grid"></span>
+    </div>
+
+    <header class="topbar">
+      <div class="brand">
+        <a class="partner-logo" href="https://www.nttdata.com" target="_blank" rel="noopener noreferrer">
+          <img src="brand/ntt-data-logo.svg" alt="NTT DATA" />
+        </a>
+        <span class="divider" aria-hidden="true"></span>
+        <a class="brand-home" href="#/" title="All personas">
+          <span class="brand-mark" aria-hidden="true">APU</span>
+          <span class="brand-text">
+            <span class="brand-title">GenAI Platform</span>
+            <span class="brand-sub">Asia Pacific University</span>
+          </span>
+        </a>
+        <span class="badge" id="mode-badge" hidden>Demo mode</span>
+      </div>
+
+      <div class="topbar-right">
+        <div class="persona-picker" id="persona-picker" hidden>
+          <label for="persona-select">Viewing as</label>
+          <div class="select-wrap">
+            <span class="persona-dot" aria-hidden="true"></span>
+            <select id="persona-select"></select>
+            <svg class="chevron" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 7.5l5 5 5-5" /></svg>
+          </div>
+        </div>
+        <div class="user-menu" id="user-menu" hidden>
+          <span class="user-avatar" id="user-initial" aria-hidden="true">N</span>
+          <span class="user-name" id="user-name"></span>
+          <button type="button" class="icon-btn" id="logout" title="Sign out" aria-label="Sign out">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l5-5-5-5M15 12H3"/></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Sign-in -->
+    <main class="login-view" id="login" hidden>
+      <section class="login-brand" data-persona="platform">
+        <div class="login-logos">
+          <span class="partner-logo"><img src="brand/ntt-data-logo.svg" alt="NTT DATA" /></span>
+          <span class="login-x" aria-hidden="true">×</span>
+          <span class="brand-mark" aria-hidden="true">APU</span>
+        </div>
+        <h1>Welcome to the APU <span class="rainbow">GenAI Platform</span></h1>
+        <p class="lead">Personal AI workspaces for everyone at Asia Pacific University, delivered by NTT DATA.</p>
+        <ul class="login-points">
+          <li><span class="lp-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M3 5h6a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H3z"/><path d="M21 5h-6a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h7z"/></svg></span>Answers grounded in APU knowledge, with sources</li>
+          <li><span class="lp-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/></svg></span>One-click AI tools for every role</li>
+          <li><span class="lp-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg></span>Secure and role-based on Google Cloud</li>
+        </ul>
+        <div class="login-personas" aria-hidden="true">
+          <span data-persona="prospective">Prospective</span>
+          <span data-persona="student">Student</span>
+          <span data-persona="lecturer">Lecturer</span>
+          <span data-persona="staff">Staff</span>
+          <span data-persona="researcher">Researcher</span>
+        </div>
+      </section>
+
+      <section class="login-panel">
+        <form class="login-card" id="login-form" data-persona="platform" novalidate>
+          <div class="login-card-head">
+            <span class="login-lock" aria-hidden="true">
+              <svg class="icon" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+            </span>
+            <div>
+              <h2>Sign in</h2>
+              <p>Enter your demo account details to continue.</p>
+            </div>
+          </div>
+          <p class="login-notice" id="login-notice" hidden></p>
+
+          <label class="field" for="login-user">
+            <span>Username</span>
+            <span class="input-wrap">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+              <input id="login-user" name="username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" required />
+            </span>
+          </label>
+
+          <label class="field" for="login-pass">
+            <span>Password</span>
+            <span class="input-wrap">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+              <input id="login-pass" name="password" type="password" autocomplete="current-password" required />
+              <button type="button" class="reveal" id="login-reveal" aria-label="Show password" aria-pressed="false">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </span>
+          </label>
+
+          <p class="form-error" id="login-error" role="alert" hidden></p>
+
+          <button type="submit" class="btn btn-primary btn-block" id="login-submit">
+            Sign in
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+          <p class="login-foot">Protected demonstration environment · Sample data only</p>
+        </form>
+      </section>
+    </main>
+
+    <main class="landing" id="landing" hidden></main>
+
+    <div class="workspace" id="workspace" hidden>
+      <main class="ws-main" id="ws-main"></main>
+      <aside class="assistant" id="assistant" aria-label="AI assistant"></aside>
+    </div>
+
+    <button type="button" class="fab" id="fab" hidden>
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/></svg>
+      Ask AI
+    </button>
+    <div class="scrim" id="scrim" hidden></div>
+    <dialog class="tool-dialog" id="tool-dialog"></dialog>
+    <div class="toast" id="toast" role="status" hidden></div>
+  </body>
+</html>

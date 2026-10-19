@@ -1,0 +1,11 @@
+node_modules
+dist
+.git
+.claude
+*.log
+.env*
+Dockerfile
+.dockerignore
+.gcloudignore
+deploy.ps1
+deploy.sh
