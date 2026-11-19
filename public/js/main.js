@@ -100,7 +100,7 @@ function showLogin(notice) {
   els.loginNotice.hidden = !notice;
   els.loginNotice.textContent = notice ?? "";
   els.loginPass.value = "";
-  document.title = "Sign in · APU GenAI Platform";
+  document.title = "Sign in · APU Gemini for Students";
   window.scrollTo(0, 0);
   (els.loginUser.value ? els.loginPass : els.loginUser).focus();
 }
@@ -166,13 +166,13 @@ function showLanding() {
   els.fab.hidden = true;
   closeAssistant();
   renderLanding(els.landing, cfg, { lastPersona: recall() });
-  document.title = "APU GenAI Platform";
+  document.title = "APU Gemini for Students";
   window.scrollTo(0, 0);
 }
 
 async function showWorkspace(persona) {
   if (current && current.id !== persona.id && chat.hasConversation()) {
-    if (!confirm("Switching persona starts a new conversation with the assistant. Continue?")) {
+    if (!confirm("Switching student type starts a new conversation. Continue?")) {
       restoring = true;
       location.hash = `#/${current.id}`;
       return;
@@ -188,7 +188,7 @@ async function showWorkspace(persona) {
   els.picker.hidden = false;
   els.fab.hidden = false;
   els.select.value = persona.id;
-  document.title = `${persona.label} · APU GenAI Platform`;
+  document.title = `${persona.label} · APU Gemini for Students`;
   chat.setPersona(persona);
   window.scrollTo(0, 0);
   await renderWorkspace(els.main, persona, {

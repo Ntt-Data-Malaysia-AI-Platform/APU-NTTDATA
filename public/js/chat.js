@@ -18,7 +18,7 @@ export function createChat(root, { onOpen }) {
       <button type="button" class="icon-btn" id="as-new" title="New conversation" aria-label="New conversation">${icon("refresh")}</button>
       <button type="button" class="icon-btn as-close" id="as-close" title="Close" aria-label="Close assistant">${icon("close")}</button>
     </div>
-    <button type="button" class="as-jump" id="as-jump" hidden>${icon("arrowDown")} Latest</button>
+    <button type="button" class="as-jump" id="as-jump" hidden>${icon("arrowDown")} More below</button>
     <div class="as-scroll" id="as-scroll">
       <div class="as-empty" id="as-empty">
         <span class="as-empty-icon">${icon("chat")}</span>
@@ -27,6 +27,7 @@ export function createChat(root, { onOpen }) {
         <div class="as-suggestions" id="as-suggestions"></div>
       </div>
       <ol class="thread" id="as-thread" aria-live="polite"></ol>
+      <div class="as-spacer" id="as-spacer" aria-hidden="true"></div>
     </div>
     <form class="composer" id="as-form">
       <label class="sr-only" for="as-input">Message</label>
@@ -49,12 +50,15 @@ export function createChat(root, { onOpen }) {
     send: $("as-send"),
     stop: $("as-stop"),
     jump: $("as-jump"),
+    spacer: $("as-spacer"),
     expand: $("as-expand"),
   };
 
-  // `pinned` = the reader is at the bottom, so new text should keep them there.
-  // Scrolling up unpins (we stop following) until they come back down.
-  const state = { persona: null, history: [], controller: null, pinned: true };
+  // Answers read from the top down: each new question is scrolled to the top
+  // of the panel and its answer fills in below it. The panel never jumps to
+  // the end; "More below" appears when the answer runs past the visible area.
+  // `turn` is the newest question's list item.
+  const state = { persona: null, history: [], controller: null, turn: null };
 
   // ---------- rendering ----------
 
@@ -72,6 +76,7 @@ export function createChat(root, { onOpen }) {
     bubble.append(document.createTextNode(text));
     li.append(bubble);
     els.thread.append(li);
+    return li;
   }
 
   function addAssistant() {
@@ -126,7 +131,8 @@ export function createChat(root, { onOpen }) {
     view.pending = false;
     view.lastRender = Date.now();
     view.content.innerHTML = renderMarkdown(view.text);
-    stickToBottom();
+    fitSpacer();
+    updateJump();
   }
 
   // Render at most every ~50 ms while streaming: the first words appear at
@@ -140,16 +146,34 @@ export function createChat(root, { onOpen }) {
     setTimeout(() => render(view), wait);
   }
 
-  const distanceFromBottom = () => els.scroll.scrollHeight - els.scroll.scrollTop - els.scroll.clientHeight;
+  // Position of an element's top inside the scrolling panel.
+  const offsetIn = (el) => el.getBoundingClientRect().top - els.scroll.getBoundingClientRect().top + els.scroll.scrollTop;
+  const GAP = 12;
 
-  function stickToBottom(force = false) {
-    if (force) state.pinned = true;
-    if (state.pinned) {
-      els.scroll.scrollTop = els.scroll.scrollHeight;
-      els.jump.hidden = true;
-    } else if (distanceFromBottom() > 40) {
-      els.jump.hidden = false; // new content below where the reader is looking
+  // Room below the newest turn, so its question can sit at the top of the
+  // panel even while the answer is still short. Shrinks as the answer grows.
+  function fitSpacer() {
+    if (!state.turn) {
+      els.spacer.style.height = "0px";
+      return;
     }
+    const below = offsetIn(els.thread) + els.thread.offsetHeight - offsetIn(state.turn);
+    const room = els.scroll.clientHeight - below - GAP * 2;
+    els.spacer.style.height = `${Math.max(0, Math.round(room))}px`;
+  }
+
+  // Show "More below" when answer text runs past the bottom of the panel.
+  function updateJump() {
+    const contentBottom = offsetIn(els.thread) + els.thread.offsetHeight;
+    const viewBottom = els.scroll.scrollTop + els.scroll.clientHeight;
+    els.jump.hidden = !state.turn || contentBottom - viewBottom < 24;
+  }
+
+  function showTurn(li) {
+    state.turn = li;
+    fitSpacer();
+    els.scroll.scrollTop = Math.max(0, offsetIn(li) - GAP);
+    updateJump();
   }
 
   function addActions(view) {
@@ -206,9 +230,9 @@ export function createChat(root, { onOpen }) {
     autosize();
 
     state.history.push({ role: "user", content });
-    addUser(display ?? content, tool);
+    const userLi = addUser(display ?? content, tool);
     const view = addAssistant();
-    stickToBottom(true);
+    showTurn(userLi);
 
     const controller = new AbortController();
     state.controller = controller;
@@ -240,7 +264,8 @@ export function createChat(root, { onOpen }) {
       if (view.pending || view.text) render(view); // flush the last tokens
       view.li.classList.remove("streaming");
       if (view.text.trim()) addActions(view);
-      stickToBottom();
+      fitSpacer();
+      updateJump();
       if (state.controller === controller) {
         if (view.text.trim()) state.history.push({ role: "assistant", content: view.text });
         else {
@@ -257,8 +282,9 @@ export function createChat(root, { onOpen }) {
     state.controller?.abort();
     state.controller = null;
     state.history = [];
-    state.pinned = true;
+    state.turn = null;
     els.thread.replaceChildren();
+    els.spacer.style.height = "0px";
     els.empty.hidden = false;
     els.jump.hidden = true;
     els.scroll.scrollTop = 0;
@@ -300,19 +326,15 @@ export function createChat(root, { onOpen }) {
   els.stop.addEventListener("click", () => state.controller?.abort());
   $("as-new").addEventListener("click", reset);
 
-  // Follow new text only while the reader is at the bottom.
-  els.scroll.addEventListener(
-    "scroll",
-    () => {
-      state.pinned = distanceFromBottom() < 60;
-      if (state.pinned) els.jump.hidden = true;
-    },
-    { passive: true },
-  );
+  els.scroll.addEventListener("scroll", updateJump, { passive: true });
+  // "More below" scrolls one panel-height further down the answer.
   els.jump.addEventListener("click", () => {
-    state.pinned = true;
-    els.scroll.scrollTop = els.scroll.scrollHeight;
-    els.jump.hidden = true;
+    els.scroll.scrollTop += Math.round(els.scroll.clientHeight * 0.8);
+    updateJump();
+  });
+  window.addEventListener("resize", () => {
+    fitSpacer();
+    updateJump();
   });
 
   // Esc stops an answer that is still streaming.

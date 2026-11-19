@@ -1,6 +1,6 @@
 ---
 title: Campus, library and IT services
-audience: public, student, staff
+audience: public, student
 owner: Student Services
 ---
 

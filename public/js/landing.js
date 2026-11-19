@@ -3,8 +3,8 @@ import { escapeHtml as e } from "./markdown.js";
 
 const PILLARS = [
   { icon: "doc", title: "Grounded in APU knowledge", text: "Answers come from approved APU documents, with sources you can open." },
-  { icon: "lock", title: "Role-based access", text: "Each persona sees only the documents and records its role allows." },
-  { icon: "shield", title: "Secure on Google Cloud", text: "Runs in APU's own cloud tenant, designed for Malaysia's PDPA." },
+  { icon: "lock", title: "Right for your studies", text: "Each student type sees only the documents and records meant for it." },
+  { icon: "gemini", title: "Gemini on Google Cloud", text: "Built for Gemini on Vertex AI, in APU's own cloud project, designed for Malaysia's PDPA." },
   { icon: "globe", title: "Speaks your language", text: "Ask in English, Bahasa Melayu or Chinese and get answers in kind." },
 ];
 
@@ -14,15 +14,15 @@ export function renderLanding(root, cfg, { lastPersona }) {
   root.innerHTML = `
     <section class="hero">
       <div class="hero-copy">
-        <span class="kicker">${icon("sparkle", "spark-icon")} NTT DATA × APU · GenAI Platform</span>
-        <h1>One intelligent platform for <span class="grad-text rainbow">everyone at APU</span></h1>
-        <p class="lead">Personal workspaces for prospective students, students, lecturers, staff and researchers, each with a live dashboard, one-click AI tools and an assistant that knows APU.</p>
+        <span class="kicker">${icon("gemini", "spark-icon")} NTT DATA × APU · Gemini for Students</span>
+        <h1>Gemini AI for Education <span class="grad-text rainbow">Reimagined</span> <span class="hero-for">for Students</span></h1>
+        <p class="lead">Personal Gemini workspaces for prospective, current, PhD, international and Master's students, each with a live dashboard, one-click AI tools and an assistant that knows APU.</p>
         <div class="hero-cta">
-          <a class="btn btn-primary" href="#personas">Choose your persona ${icon("arrow")}</a>
+          <a class="btn btn-primary" href="#personas">Choose your student type ${icon("arrow")}</a>
           ${last ? `<a class="btn btn-ghost" href="#/${e(last.id)}" data-persona="${e(last.id)}"><span class="dot"></span>Continue as ${e(last.label)}</a>` : ""}
         </div>
         <dl class="hero-stats">
-          <div><dt>${cfg.personas.length}</dt><dd>personas</dd></div>
+          <div><dt>${cfg.personas.length}</dt><dd>student types</dd></div>
           <div><dt>${cfg.knowledge.documents}</dt><dd>knowledge sources</dd></div>
           <div><dt>24/7</dt><dd>always on</dd></div>
         </dl>
@@ -31,19 +31,19 @@ export function renderLanding(root, cfg, { lastPersona }) {
       <div class="hero-visual" aria-hidden="true">
         <div class="float-card fc-1" data-persona="student">
           <span class="fc-icon">${icon("wallet")}</span>
-          <div><small>Fees outstanding</small><strong>RM 4,850</strong><em>due in 9 days</em></div>
+          <div><small>Current student</small><strong>RM 4,850 due</strong><em>in 9 days</em></div>
         </div>
-        <div class="float-card fc-2" data-persona="lecturer">
-          <span class="fc-icon">${icon("quiz")}</span>
-          <div><small>Quiz generator</small><strong>10 questions ready</strong><em>Database normalisation</em></div>
+        <div class="float-card fc-2" data-persona="phd">
+          <span class="fc-icon">${icon("flag")}</span>
+          <div><small>PhD student</small><strong>Progress report</strong><em>due in 24 days</em></div>
         </div>
-        <div class="float-card fc-3" data-persona="researcher">
-          <span class="fc-icon">${icon("target")}</span>
-          <div><small>Funding call</small><strong>Closes in 21 days</strong><em>Internal seed grant</em></div>
+        <div class="float-card fc-3" data-persona="international">
+          <span class="fc-icon">${icon("globe")}</span>
+          <div><small>International student</small><strong>Student Pass renewal</strong><em>3 of 6 steps done</em></div>
         </div>
-        <div class="float-card fc-4" data-persona="staff">
-          <span class="fc-icon">${icon("ticket")}</span>
-          <div><small>Service ticket</small><strong>DEMO-104233</strong><em>In progress</em></div>
+        <div class="float-card fc-4" data-persona="masters">
+          <span class="fc-icon">${icon("award")}</span>
+          <div><small>Master's student</small><strong>18 of 42 credits</strong><em>proposal due in 19 days</em></div>
         </div>
         <div class="orb"></div>
       </div>
@@ -51,7 +51,7 @@ export function renderLanding(root, cfg, { lastPersona }) {
 
     <section class="personas-section" id="personas">
       <div class="section-head">
-        <h2>Who are you today?</h2>
+        <h2>What kind of student are you?</h2>
         <p>Pick a persona to open its workspace. You can switch any time from the top-right menu.</p>
       </div>
       <div class="persona-grid">
@@ -84,7 +84,7 @@ export function renderLanding(root, cfg, { lastPersona }) {
 
     <footer class="site-footer">
       <span>Delivered by</span>
-      <img src="brand/ntt-data-logo.svg" alt="NTT DATA" />
+      <img src="brand/ntt-data-logo.png" alt="NTT DATA" />
       <span class="sep">·</span>
       <span>Demonstration build with sample data. Not official APU information.</span>
     </footer>`;

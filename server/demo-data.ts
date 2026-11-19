@@ -113,48 +113,7 @@ export function studentData() {
 }
 
 // ---------------------------------------------------------------------------
-// Lecturer
-// ---------------------------------------------------------------------------
-
-export function teachingData() {
-  return {
-    lecturer: "Demo Lecturer",
-    school: "School of Computing",
-    modules: [
-      {
-        code: "CT046-3-2",
-        name: "Database Systems",
-        cohort: 182,
-        learningOutcomes: [
-          "Design normalised relational schemas",
-          "Write SQL queries for data retrieval and manipulation",
-          "Explain transaction management and concurrency control",
-        ],
-        assessments: [
-          { name: "Group assignment: database design", weight: "40%", due: daysFromNow(11), aiLevel: "AI-assisted" },
-          { name: "Final examination", weight: "60%", due: daysFromNow(48), aiLevel: "No AI" },
-        ],
-      },
-      {
-        code: "CT047-3-2",
-        name: "Software Engineering",
-        cohort: 156,
-        learningOutcomes: [
-          "Apply requirements engineering techniques",
-          "Model systems using UML",
-          "Plan and manage a software project in a team",
-        ],
-        assessments: [
-          { name: "Individual reflection log", weight: "20%", due: daysFromNow(6), aiLevel: "AI-assisted" },
-          { name: "Group software project", weight: "50%", due: daysFromNow(32), aiLevel: "AI-integrated" },
-        ],
-      },
-    ],
-  };
-}
-
-// ---------------------------------------------------------------------------
-// Admin staff
+// Tickets (kept for the ticket API)
 // ---------------------------------------------------------------------------
 
 export interface Ticket {
@@ -197,41 +156,111 @@ export function createTicket(input: { category: string; title: string; details?:
   };
 }
 
-export function staffData() {
+
+// ---------------------------------------------------------------------------
+// PhD student
+// ---------------------------------------------------------------------------
+
+export function phdData() {
   return {
-    name: "Demo Staff",
-    department: "Student Services",
-    leave: { entitled: 18, taken: 7, pending: 2 },
-    approvals: [
-      { title: "Purchase requisition: lab consumables (RM 3,400)", from: "IT Labs", due: daysFromNow(2) },
-      { title: "Leave request: 3 days", from: "Team member", due: daysFromNow(3) },
-      { title: "Expense claim: open day catering", from: "Marketing", due: daysFromNow(5) },
+    profile: {
+      name: "Demo PhD Candidate",
+      studentId: "TP0PHD00",
+      programme: "PhD in Computing (full-time)",
+      year: 2,
+      thesis: "Explainable deep learning for early diabetic retinopathy screening",
+      mainSupervisor: "Main supervisor (sample)",
+      coSupervisor: "Co-supervisor (sample)",
+    },
+    milestones: [
+      { milestone: "Research proposal defence", due: daysFromNow(-210), status: "Passed" },
+      { milestone: "Ethics approval", due: daysFromNow(-160), status: "Approved" },
+      { milestone: "Annual progress report (Year 2)", due: daysFromNow(24), status: "Due" },
+      { milestone: "Mid-candidature review", due: daysFromNow(75), status: "Upcoming" },
+      { milestone: "Thesis submission", due: daysFromNow(540), status: "Upcoming" },
     ],
-    calendar: [
-      { title: "Payroll cut-off for claims", date: daysFromNow(4) },
-      { title: "Orientation week preparation meeting", date: daysFromNow(8) },
-      { title: "Quarterly policy review", date: daysFromNow(19) },
+    progress: { overallPercent: 45, chaptersDrafted: 3, chaptersPlanned: 7 },
+    supervision: {
+      lastMeeting: daysFromNow(-9),
+      nextMeeting: daysFromNow(5),
+      meetingsThisYear: 14,
+      actions: ["Revise Chapter 3 methodology", "Run ablation study on dataset B", "Draft conference abstract"],
+    },
+    funding: { type: "Graduate research assistantship (sample)", stipendMonthly: 2700, endsOn: daysFromNow(400), conferenceAllowanceLeft: 3500 },
+    publications: [
+      { title: "Lightweight CNN for fundus image grading", venue: "Conference paper", status: "Accepted" },
+      { title: "Explainability maps for retinal screening", venue: "Journal article", status: "Under review" },
     ],
+    requirement: "At least one indexed journal article accepted before thesis submission",
   };
 }
 
 // ---------------------------------------------------------------------------
-// Researcher
+// International student
 // ---------------------------------------------------------------------------
 
-export function researchData() {
+export function visaData() {
   return {
-    researcher: "Demo Researcher",
-    area: "Applied machine learning for healthcare",
-    activeGrants: [
-      { title: "Early detection of diabetic retinopathy with deep learning", funder: "FRGS (sample)", amount: 98000, ends: daysFromNow(210), nextReport: daysFromNow(40), progress: 55 },
-      { title: "Industry chatbot for clinic triage", funder: "Industry partner (sample)", amount: 60000, ends: daysFromNow(120), nextReport: daysFromNow(15), progress: 70 },
+    profile: {
+      name: "Demo International Student",
+      studentId: "TP0INT00",
+      nationality: "Indonesian",
+      programme: "BSc (Hons) Software Engineering",
+      year: 1,
+    },
+    studentPass: {
+      expiresOn: daysFromNow(58),
+      renewalWindowOpens: daysFromNow(-32),
+      renewalStatus: "Not started",
+      daysUntilExpiry: 58,
+    },
+    renewalChecklist: [
+      { step: "Attendance of at least 80%", done: true, detail: "Currently 87%" },
+      { step: "Satisfactory academic progress", done: true, detail: "CGPA 3.10" },
+      { step: "Valid passport (18+ months)", done: true, detail: "Expires in 3 years" },
+      { step: "Medical insurance renewed", done: false, detail: "Policy ends with the pass" },
+      { step: "Renewal fee paid", done: false, detail: "Pay through the student portal" },
+      { step: "Passport submitted for endorsement", done: false, detail: "After EMGS approval" },
     ],
-    ethicsApprovals: [{ project: "Diabetic retinopathy imaging study", status: "Approved", expires: daysFromNow(180) }],
-    matchingCalls: [
-      { call: "Internal seed grant, round 2", internalDeadline: daysFromNow(21), maxAmount: "RM 20,000" },
-      { call: "National fundamental research grant (sample call)", internalDeadline: daysFromNow(55), maxAmount: "RM 150,000" },
-      { call: "ASEAN collaborative research fund (sample call)", internalDeadline: daysFromNow(80), maxAmount: "RM 250,000" },
+    insurance: { provider: "Student medical insurance (sample)", expiresOn: daysFromNow(58) },
+    attendance: 87,
+    support: "International Student Office, Level 2, open Monday to Friday 9:00–17:00",
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Master's student
+// ---------------------------------------------------------------------------
+
+export function mastersData() {
+  return {
+    profile: {
+      name: "Demo Master's Student",
+      studentId: "TP0MSC00",
+      programme: "MSc in Data Science and Business Analytics",
+      mode: "Part-time (weekend classes)",
+      semester: 2,
+    },
+    modules: [
+      { module: "Machine Learning for Business", credits: 4, status: "In progress", grade: "–" },
+      { module: "Big Data Analytics", credits: 4, status: "In progress", grade: "–" },
+      { module: "Research Methods", credits: 3, status: "Completed", grade: "A" },
+      { module: "Data Visualisation and Storytelling", credits: 3, status: "Completed", grade: "A-" },
     ],
+    credits: { earned: 18, required: 42 },
+    dissertation: [
+      { step: "Choose topic and supervisor", status: "done" },
+      { step: "Proposal approved", status: "current", due: daysFromNow(19) },
+      { step: "Data collection and analysis", status: "todo" },
+      { step: "Draft dissertation", status: "todo" },
+      { step: "Submit and present", status: "todo" },
+    ],
+    weekendClasses: [
+      { day: "Saturday", start: "09:00", end: "12:00", module: "Machine Learning for Business", room: "PG Suite 3" },
+      { day: "Saturday", start: "14:00", end: "17:00", module: "Big Data Analytics", room: "Tech Lab 5-01" },
+      { day: "Sunday", start: "10:00", end: "12:00", module: "Dissertation clinic (optional)", room: "Online" },
+    ],
+    fees: { semesterInvoice: 9800, paid: 9800, outstanding: 0, employerSponsored: true },
+    cgpa: 3.78,
   };
 }

@@ -1,6 +1,6 @@
 ---
 title: Research grants, ethics and publishing
-audience: research, academic
+audience: research, postgraduate
 owner: Research and Innovation Office
 ---
 

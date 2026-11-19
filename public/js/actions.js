@@ -3,23 +3,11 @@
 // API straight away). Option lists mirror the sample data in server/demo-data.ts.
 
 const STUDENT_MODULES = ["Database Systems", "Object Oriented Programming", "Software Engineering", "Computer Networks"];
-const LECTURER_MODULES = ["CT046-3-2 Database Systems", "CT047-3-2 Software Engineering"];
-const ASSESSMENTS = [
-  "Group assignment: database design (Database Systems, 40%)",
-  "Final examination (Database Systems, 60%)",
-  "Individual reflection log (Software Engineering, 20%)",
-  "Group software project (Software Engineering, 50%)",
-];
 const PROGRAMMES = [
   "BSc (Hons) Computer Science",
   "BSc (Hons) Software Engineering",
   "BSc (Hons) Data Science and Business Analytics",
   "Foundation in Computing",
-];
-const CALLS = [
-  "Internal seed grant, round 2",
-  "National fundamental research grant (sample call)",
-  "ASEAN collaborative research fund (sample call)",
 ];
 
 export const ACTIONS = {
@@ -121,155 +109,128 @@ export const ACTIONS = {
     },
   ],
 
-  lecturer: [
-    {
-      id: "quiz",
-      icon: "quiz",
-      title: "Quiz generator",
-      blurb: "Questions with answers, mapped to learning outcomes.",
-      fields: [
-        { name: "module", label: "Module", type: "select", options: LECTURER_MODULES },
-        { name: "topic", label: "Topic", type: "text", placeholder: "e.g. normalisation to 3NF", required: true },
-        { name: "count", label: "Number of questions", type: "number", value: "10", min: 3, max: 25 },
-        { name: "format", label: "Format", type: "select", options: ["Multiple choice", "Short answer", "Mixed"] },
-        { name: "difficulty", label: "Difficulty", type: "select", options: ["Introductory", "Intermediate", "Advanced"], value: "Intermediate" },
-      ],
-      prompt: (v) =>
-        `Create a ${v.count}-question ${v.format.toLowerCase()} quiz on "${v.topic}" for ${v.module} at ${v.difficulty.toLowerCase()} level. Map each question to one of my module's learning outcomes, and put an answer key with brief explanations at the end.`,
-    },
-    {
-      id: "rubric",
-      icon: "list",
-      title: "Rubric builder",
-      blurb: "A marking rubric with clear performance levels.",
-      fields: [
-        { name: "assessment", label: "Assessment", type: "select", options: ASSESSMENTS },
-        { name: "criteria", label: "Number of criteria", type: "number", value: "5", min: 3, max: 8 },
-        { name: "levels", label: "Performance levels", type: "select", options: ["4 levels", "5 levels", "3 levels"] },
-      ],
-      prompt: (v) =>
-        `Build a marking rubric for "${v.assessment}" with ${v.criteria} criteria and ${v.levels}, as a table. Give each criterion a weighting that sums to 100%, and describe each level concretely. Note how the assessment's GenAI level should be reflected.`,
-    },
-    {
-      id: "feedback",
-      icon: "edit",
-      title: "Feedback drafter",
-      blurb: "Constructive feedback you review before release.",
-      fields: [
-        { name: "work", label: "Summary of the student's work", type: "textarea", placeholder: "Strengths, weaknesses, what was missing…", required: true },
-        { name: "band", label: "Grade band", type: "select", options: ["Distinction (70+)", "Merit (60–69)", "Pass (40–59)", "Fail (<40)"] },
-        { name: "tone", label: "Tone", type: "select", options: ["Encouraging", "Direct", "Formal"] },
-      ],
-      prompt: (v) =>
-        `Draft ${v.tone.toLowerCase()} feedback for a student's submission in the ${v.band} band. Notes on the work: ${v.work}. Structure it as strengths, areas to improve with specific actions, and one feed-forward point. I will review it and set the final mark.`,
-    },
-    {
-      id: "lesson",
-      icon: "presentation",
-      title: "Lesson planner",
-      blurb: "An active-learning plan for your next class.",
-      fields: [
-        { name: "module", label: "Module", type: "select", options: LECTURER_MODULES },
-        { name: "topic", label: "Topic", type: "text", placeholder: "e.g. UML sequence diagrams", required: true },
-        { name: "minutes", label: "Duration (minutes)", type: "number", value: "120", min: 30, max: 240 },
-      ],
-      prompt: (v) =>
-        `Plan a ${v.minutes}-minute class on "${v.topic}" for ${v.module}: objectives linked to the learning outcomes, a timed run sheet with active-learning activities, and a 3-question exit ticket.`,
-    },
-  ],
 
-  staff: [
+  phd: [
     {
-      id: "ticket",
-      icon: "ticket",
-      title: "Log a service ticket",
-      blurb: "IT, facilities, HR or finance. Logged straight away.",
-      direct: "ticket",
-      fields: [
-        { name: "category", label: "Category", type: "select", options: ["IT", "Facilities", "HR", "Finance"] },
-        { name: "priority", label: "Priority", type: "select", options: ["normal", "low", "high"] },
-        { name: "title", label: "Short title", type: "text", placeholder: "e.g. Projector in B-07-03 not working", required: true },
-        { name: "details", label: "Details", type: "textarea", placeholder: "What's wrong, where, since when…" },
-      ],
-    },
-    {
-      id: "email",
-      icon: "mail",
-      title: "Email drafter",
-      blurb: "Clear, on-tone emails in seconds.",
-      fields: [
-        { name: "to", label: "Recipient", type: "text", placeholder: "e.g. a parent, a vendor, all students", required: true },
-        { name: "purpose", label: "What should the email say?", type: "textarea", required: true },
-        { name: "tone", label: "Tone", type: "select", options: ["Friendly", "Formal", "Firm but polite"] },
-      ],
-      prompt: (v) =>
-        `Draft a ${v.tone.toLowerCase()} email to ${v.to}. Purpose: ${v.purpose}. If an APU policy is relevant, check it and reflect it accurately. Include a subject line.`,
-    },
-    {
-      id: "minutes",
+      id: "progress",
       icon: "doc",
-      title: "Meeting minutes",
-      blurb: "Turn rough notes into minutes with actions.",
-      fields: [{ name: "notes", label: "Paste your meeting notes", type: "textarea", rows: 8, required: true }],
+      title: "Progress report builder",
+      blurb: "A structured annual progress report.",
+      fields: [
+        { name: "done", label: "What you achieved this year", type: "textarea", placeholder: "e.g. proposal defence passed, ethics approved, Chapter 3 drafted", required: true },
+        { name: "issues", label: "Problems or delays", type: "textarea", placeholder: "e.g. dataset access took 2 months" },
+      ],
       prompt: (v) =>
-        `Turn these meeting notes into formal minutes: attendees (if mentioned), key discussion points, decisions, and an action table with owner and due date.\n\nNotes:\n${v.notes}`,
+        `Help me structure my annual PhD progress report. Achievements: ${v.done}. Issues: ${v.issues || "none"}. Check my milestones, then give me headings with what to write under each, and a plan for next year. Don't write the report for me.`,
     },
     {
-      id: "policy",
+      id: "supervision",
+      icon: "users",
+      title: "Supervision meeting prep",
+      blurb: "An agenda and update for your supervisor.",
+      fields: [
+        { name: "focus", label: "What do you want to discuss?", type: "textarea", placeholder: "e.g. ablation results, conference deadline", required: true },
+        { name: "length", label: "Meeting length", type: "select", options: ["30 minutes", "45 minutes", "60 minutes"] },
+      ],
+      prompt: (v) =>
+        `Prepare a ${v.length} supervision meeting agenda. Topics: ${v.focus}. Check my open supervision actions, and include a short progress update, questions to ask and decisions I need.`,
+    },
+    {
+      id: "litreview",
       icon: "search",
-      title: "Policy explainer",
-      blurb: "Ask any policy question and get a cited answer.",
-      fields: [{ name: "question", label: "Your question", type: "text", placeholder: "e.g. Can I carry forward unused leave?", required: true }],
-      prompt: (v) => `${v.question} Answer from APU policy with citations, then list any steps I need to take.`,
+      title: "Literature search plan",
+      blurb: "Keywords, databases and a search string.",
+      fields: [{ name: "question", label: "Research question", type: "text", placeholder: "e.g. explainable AI for retinal screening", required: true }],
+      prompt: (v) =>
+        `Create a literature search plan for: "${v.question}". Give key concepts with synonyms, a Boolean search string, which library databases to use, and inclusion and exclusion criteria. Don't invent references.`,
+    },
+    {
+      id: "conference",
+      icon: "globe",
+      title: "Conference allowance",
+      blurb: "Eligibility, documents and timing.",
+      fields: [
+        { name: "conference", label: "Conference", type: "text", placeholder: "e.g. international conference on medical imaging", required: true },
+        { name: "date", label: "Travel date", type: "date", required: true },
+      ],
+      prompt: (v) => `I want to present at ${v.conference}, travelling on ${v.date}. Am I eligible for the conference allowance, how much is left, what do I need to submit and by when?`,
     },
   ],
 
-  researcher: [
+  international: [
+    {
+      id: "renewal",
+      icon: "globe",
+      title: "Student Pass renewal plan",
+      blurb: "Your steps and dates to stay valid.",
+      fields: [],
+      prompt: () => "Check my Student Pass status and renewal checklist, then give me a dated, step-by-step plan to renew it on time, with the documents for each step.",
+    },
+    {
+      id: "attendance",
+      icon: "chart",
+      title: "Attendance and visa check",
+      blurb: "How attendance affects your renewal.",
+      fields: [{ name: "worry", label: "What's worrying you?", type: "text", placeholder: "e.g. I'll miss a week for a family emergency", required: true }],
+      prompt: (v) => `${v.worry}. How could this affect my attendance and Student Pass renewal, and what should I do now? Check my current attendance first.`,
+    },
+    {
+      id: "documents",
+      icon: "list",
+      title: "Document checklist",
+      blurb: "What to prepare for any visa step.",
+      fields: [{ name: "task", label: "For", type: "select", options: ["Student Pass renewal", "Changing programme", "Travelling home during the break", "Deferring a semester"] }],
+      prompt: (v) => `Give me a checklist of documents and steps for: ${v.task.toLowerCase()}, as an international student. Include who to contact and how long it takes.`,
+    },
+    {
+      id: "settle",
+      icon: "pin",
+      title: "Settling-in guide",
+      blurb: "Banking, SIM, health and getting around.",
+      fields: [{ name: "need", label: "I need help with", type: "select", options: ["Opening a bank account", "Getting a SIM card", "Seeing a doctor", "Getting to campus", "Part-time work rules"] }],
+      prompt: (v) => `I'm a new international student in Kuala Lumpur. Help me with: ${v.need.toLowerCase()}. Give practical steps and what to bring.`,
+    },
+  ],
+
+  masters: [
     {
       id: "proposal",
       icon: "doc",
-      title: "Proposal outline",
-      blurb: "A funder-ready structure for your next proposal.",
+      title: "Dissertation proposal helper",
+      blurb: "Structure and feedback for your proposal.",
       fields: [
-        { name: "title", label: "Working title", type: "text", required: true },
-        { name: "call", label: "Funding call", type: "select", options: CALLS },
-        { name: "problem", label: "The problem you're tackling", type: "textarea", required: true },
+        { name: "topic", label: "Topic", type: "text", placeholder: "e.g. churn prediction for Malaysian telcos", required: true },
+        { name: "question", label: "Research question", type: "textarea", required: true },
       ],
       prompt: (v) =>
-        `Build a proposal outline for "${v.title}" targeting the ${v.call}. Problem: ${v.problem}. Include problem statement, objectives, methodology, expected outcomes and impact, milestones, and a budget structure. Flag anything the funder will scrutinise. Don't invent citations or statistics.`,
+        `Help me structure my Master's dissertation proposal on "${v.topic}". Research question: ${v.question}. Give the sections with what each must cover, likely data sources and risks. Don't write it for me.`,
     },
     {
-      id: "abstract",
-      icon: "edit",
-      title: "Abstract polisher",
-      blurb: "Tighten an abstract to a word limit.",
+      id: "method",
+      icon: "bulb",
+      title: "Research methods coach",
+      blurb: "Pick the right method for your question.",
       fields: [
-        { name: "abstract", label: "Your abstract", type: "textarea", rows: 8, required: true },
-        { name: "limit", label: "Word limit", type: "number", value: "250", min: 50, max: 500 },
+        { name: "question", label: "Your research question", type: "textarea", required: true },
+        { name: "data", label: "Data you can get", type: "select", options: ["Survey responses", "Company dataset", "Public datasets", "Interviews", "Not sure yet"] },
       ],
-      prompt: (v) =>
-        `Improve this abstract for clarity and impact within ${v.limit} words, keeping all claims as they are. Then list the main changes you made.\n\n${v.abstract}`,
+      prompt: (v) => `My research question is: ${v.question}. I can get: ${v.data.toLowerCase()}. Which research methods fit, what are the trade-offs, and which would you recommend?`,
     },
     {
-      id: "ethics",
-      icon: "shield",
-      title: "Ethics readiness check",
-      blurb: "What your ethics application needs before you submit.",
-      fields: [
-        { name: "study", label: "Describe your study", type: "textarea", required: true },
-        { name: "participants", label: "Participants", type: "select", options: ["Adults", "Students", "Patients", "Minors", "No human participants"] },
-      ],
-      prompt: (v) =>
-        `Check my study's readiness for research ethics approval. Participants: ${v.participants}. Study: ${v.study}. List the documents I need, the likely review route and timeline, and data management (PDPA) points to address, as a checklist.`,
+      id: "plan",
+      icon: "calendar",
+      title: "Study plan around work",
+      blurb: "Weekly plan for part-time study.",
+      fields: [{ name: "hours", label: "Hours a week you can study", type: "number", value: "10", min: 2, max: 40 }],
+      prompt: (v) => `I study part-time alongside full-time work and have ${v.hours} hours a week. Using my modules and dissertation milestones, build a weekly study plan as a table.`,
     },
     {
-      id: "lit",
-      icon: "search",
-      title: "Literature search plan",
-      blurb: "Keywords, databases and a search strategy.",
-      fields: [{ name: "question", label: "Research question", type: "text", required: true }],
-      prompt: (v) =>
-        `Create a literature search plan for: "${v.question}". Give key concepts with synonyms, a Boolean search string, which library databases to use, and inclusion and exclusion criteria.`,
+      id: "career",
+      icon: "target",
+      title: "Career and CV helper",
+      blurb: "Turn your modules into job-ready skills.",
+      fields: [{ name: "role", label: "Target role", type: "text", placeholder: "e.g. data analyst in banking", required: true }],
+      prompt: (v) => `I'm doing an MSc in Data Science and Business Analytics and want to become a ${v.role}. Map my modules to the skills employers want, and suggest CV bullet points and a portfolio project.`,
     },
   ],
 };

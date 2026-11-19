@@ -49,17 +49,17 @@
 [data-persona="platform"]    { --g1: #6366f1; --g2: #ec4899; --g3: #06b6d4; --accent: #4f46e5; }
 [data-persona="prospective"] { --g1: #06b6d4; --g2: #3b82f6; --g3: #14b8a6; --accent: #0e7490; }
 [data-persona="student"]     { --g1: #6366f1; --g2: #8b5cf6; --g3: #3b82f6; --accent: #4f46e5; }
-[data-persona="lecturer"]    { --g1: #d946ef; --g2: #8b5cf6; --g3: #f472b6; --accent: #a21caf; }
-[data-persona="staff"]       { --g1: #f97316; --g2: #f43f5e; --g3: #f59e0b; --accent: #c2410c; }
-[data-persona="researcher"]  { --g1: #10b981; --g2: #0ea5e9; --g3: #84cc16; --accent: #047857; }
+[data-persona="phd"]         { --g1: #d946ef; --g2: #8b5cf6; --g3: #f472b6; --accent: #a21caf; }
+[data-persona="international"]{ --g1: #f97316; --g2: #f43f5e; --g3: #f59e0b; --accent: #c2410c; }
+[data-persona="masters"]     { --g1: #10b981; --g2: #0ea5e9; --g3: #84cc16; --accent: #047857; }
 
 @media (prefers-color-scheme: dark) {
   [data-persona="platform"]    { --accent: #a5b4fc; }
   [data-persona="prospective"] { --accent: #67e8f9; }
   [data-persona="student"]     { --accent: #a5b4fc; }
-  [data-persona="lecturer"]    { --accent: #f0abfc; }
-  [data-persona="staff"]       { --accent: #fdba74; }
-  [data-persona="researcher"]  { --accent: #6ee7b7; }
+  [data-persona="phd"]         { --accent: #f0abfc; }
+  [data-persona="international"]{ --accent: #fdba74; }
+  [data-persona="masters"]     { --accent: #6ee7b7; }
 }
 
 /* Derived values must be declared where the stops are set. */
@@ -376,8 +376,8 @@ body[data-view="boot"] .topbar { display: none; }
 .login-card-head p { margin: 2px 0 0; color: var(--text-2); font-size: 14px; }
 .login-card .field { margin-bottom: 16px; }
 .input-wrap { position: relative; display: flex; align-items: center; }
-.input-wrap > .icon { position: absolute; left: 13px; width: 18px; height: 18px; color: var(--text-2); pointer-events: none; }
-.input-wrap input { width: 100%; padding: 12px 44px 12px 42px; }
+.input-wrap > .icon { position: absolute; left: 15px; width: 18px; height: 18px; color: var(--text-2); pointer-events: none; }
+.login-card .input-wrap input { width: 100%; padding: 12px 46px 12px 46px; } /* beats the generic .field input padding */
 .login-card .field input {
   font: inherit; font-weight: 500; font-size: 15px; color: var(--text);
   border-radius: 14px; border: 1px solid var(--border); background: var(--surface-2);
@@ -1268,3 +1268,30 @@ body[data-view="boot"] .topbar { display: none; }
   .source .meta { display: none; }
   .fab { right: 16px; bottom: 16px; }
 }
+
+/* "for Students" line under the Gemini headline */
+.hero-for {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.46em;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  color: var(--text-2);
+}
+
+/* Tagline pill on the sign-in panel */
+.login-tagline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  margin: 0;
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--accent);
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--g2) 35%, transparent);
+}
+.login-tagline .icon { width: 15px; height: 15px; fill: var(--g2); stroke: none; }

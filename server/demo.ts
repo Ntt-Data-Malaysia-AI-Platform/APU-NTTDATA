@@ -12,8 +12,9 @@ const PERSONA_TOOL_TRIGGERS: { tool: string; pattern: RegExp; input: Record<stri
   { tool: "get_my_student_record", pattern: /\b(timetable|class|classes|schedule|week)\b/i, input: { section: "timetable" } },
   { tool: "get_my_student_record", pattern: /\b(result|results|grade|gpa|cgpa)\b/i, input: { section: "results" } },
   { tool: "get_my_student_record", pattern: /\b(attendance)\b/i, input: { section: "attendance" } },
-  { tool: "get_my_teaching", pattern: /\b(my modules?|assessments?|deadlines?|due|cohort)\b/i, input: {} },
-  { tool: "get_my_research_profile", pattern: /\b(my grants?|funding|calls?|close|deadlines?|status)\b/i, input: {} },
+  { tool: "get_my_phd_record", pattern: /\b(milestones?|progress report|supervis\w*|thesis|candidature|stipend|publications?|conference|viva|chapters?)\b/i, input: {} },
+  { tool: "get_my_visa_status", pattern: /\b(student pass|visa|renew\w*|expire\w*|emgs|insurance|immigration)\b/i, input: {} },
+  { tool: "get_my_masters_record", pattern: /\b(dissertation|credits?|modules?|graduate|defer\w*|capstone|proposal|weekend)\b/i, input: {} },
 ];
 
 function firstSentences(text: string, max = 2): string {
@@ -35,7 +36,7 @@ export async function runDemo(
   const question = history[history.length - 1]?.content ?? "";
   const sources = new SourceRegistry();
   const parts: string[] = [
-    "_Demo mode: no AI model is connected, so this is what the assistant retrieved for your question. Connect Claude on Vertex AI for real answers._",
+    "_Demo mode: no AI model is connected, so this is what the assistant retrieved for your question. Connect Gemini on Vertex AI for real answers._",
   ];
 
   const trigger = PERSONA_TOOL_TRIGGERS.find(

@@ -1,15 +1,14 @@
 import {
   daysFromNow,
-  listTickets,
+  mastersData,
+  phdData,
   programmes,
-  researchData,
-  staffData,
   studentData,
-  teachingData,
   upcomingIntakes,
+  visaData,
 } from "./demo-data.js";
-import { listDocuments } from "./knowledge.js";
-import { PERSONAS, type PersonaId } from "./personas.js";
+
+import type { PersonaId } from "./personas.js";
 
 /**
  * Dashboards are described as generic widgets so the browser renders every
@@ -266,307 +265,226 @@ export function dashboardFor(id: PersonaId): Dashboard {
       };
     }
 
-    case "lecturer": {
-      const t = teachingData();
-      const assessments = t.modules
-        .flatMap((m) => m.assessments.map((a) => ({ ...a, module: m.name })))
-        .sort((a, b) => a.due.localeCompare(b.due));
-      const soon = assessments.filter((a) => daysUntil(a.due) <= 14);
+    case "phd": {
+      const d = phdData();
+      const next = d.milestones.find((m) => m.status === "Due") ?? d.milestones[d.milestones.length - 1];
+      const stepStatus = (s: string): "done" | "current" | "todo" => (s === "Passed" || s === "Approved" ? "done" : s === "Due" ? "current" : "todo");
       return {
-        greeting: `Good to see you, ${t.lecturer}`,
-        subtitle: `${t.school} · ${t.modules.length} modules this semester`,
+        greeting: `Welcome back, ${d.profile.name}`,
+        subtitle: `${d.profile.programme} · Year ${d.profile.year} · ${d.profile.thesis}`,
         kpis: [
-          { label: "Modules", value: String(t.modules.length), detail: t.modules.map((m) => m.code).join(", "), icon: "book" },
-          { label: "Students", value: String(t.modules.reduce((n, m) => n + m.cohort, 0)), detail: "across all cohorts", icon: "users", tone: "info" },
-          { label: "Due in 14 days", value: String(soon.length), detail: "assessments", icon: "flag", tone: soon.length ? "warn" : "good" },
-          { label: "Next deadline", value: inDays(assessments[0].due), detail: assessments[0].name, icon: "clock", tone: urgency(assessments[0].due) },
+          { label: "Candidature progress", value: `${d.progress.overallPercent}%`, detail: `${d.progress.chaptersDrafted} of ${d.progress.chaptersPlanned} chapters drafted`, icon: "trend", tone: "info" },
+          { label: "Next milestone", value: inDays(next.due), detail: next.milestone, icon: "flag", tone: urgency(next.due) },
+          { label: "Next supervision", value: inDays(d.supervision.nextMeeting), detail: `${d.supervision.meetingsThisYear} meetings this year`, icon: "users", tone: "good" },
+          { label: "Monthly stipend", value: rm(d.funding.stipendMonthly), detail: `until ${shortDate(d.funding.endsOn)}`, icon: "wallet", tone: "info" },
         ],
         widgets: [
           {
-            type: "week",
-            title: "Teaching this week",
-            icon: "calendar",
-            ask: "Suggest how to use my free slots this week to mark the Quiz 2 short answers.",
-            events: [
-              { day: 0, start: 9, end: 11, title: "Database Systems", meta: "Lecture · Auditorium 1", tone: "info" },
-              { day: 1, start: 14, end: 16, title: "Software Engineering", meta: "Lecture · Auditorium 2", tone: "info" },
-              { day: 2, start: 10, end: 12, title: "Database Systems", meta: "Tutorial · B-04-05", tone: "warn" },
-              { day: 3, start: 15, end: 17, title: "Office hours", meta: "Room L5-12", tone: "good" },
-              { day: 4, start: 9, end: 11, title: "Software Engineering", meta: "Lab · Tech Lab 4-03", tone: "warn" },
-            ],
+            type: "stepper",
+            title: "Candidature milestones",
+            icon: "flag",
+            subtitle: d.profile.thesis,
+            ask: "What goes into my Year 2 annual progress report, and how should I prepare it with my supervisor?",
+            steps: d.milestones.map((m) => ({ label: m.milestone, meta: `${m.status} · ${shortDate(m.due)}`, status: stepStatus(m.status) })),
           },
           {
             type: "donut",
-            title: "Reflection log submissions",
+            title: "Thesis chapters",
             icon: "pie",
-            centerValue: "63%",
-            centerLabel: "submitted",
-            note: `Software Engineering · 156 students · due ${inDays(assessments[0].due)}`,
-            ask: "Draft a friendly reminder to Software Engineering students who haven't started their reflection log.",
+            centerValue: `${d.progress.chaptersDrafted} of ${d.progress.chaptersPlanned}`,
+            centerLabel: "drafted",
+            note: "Chapter 4 (results) is next after the ablation study.",
+            ask: "Help me plan the remaining thesis chapters around my milestones, with realistic dates.",
             segments: [
-              { label: "Submitted", value: 98, display: "98 students" },
-              { label: "Draft started", value: 31, display: "31 students" },
-              { label: "Not started", value: 27, display: "27 students" },
-            ],
-          },
-          {
-            type: "columns",
-            title: "Class average by assessment",
-            icon: "chart",
-            unit: "%",
-            max: 100,
-            note: "Quiz 2 dipped: normalisation questions were weakest.",
-            ask: "The Database Systems Quiz 2 average dropped to 64%, mainly on normalisation. Suggest a 20-minute revision activity.",
-            items: [
-              { label: "DB Quiz 1", value: 72 },
-              { label: "DB Quiz 2", value: 64, highlight: true },
-              { label: "SE Sprint 1", value: 78 },
-              { label: "SE Sprint 2", value: 74 },
+              { label: "Drafted", value: d.progress.chaptersDrafted, display: `${d.progress.chaptersDrafted} chapters` },
+              { label: "In progress", value: 1, display: "1 chapter" },
+              { label: "Not started", value: d.progress.chaptersPlanned - d.progress.chaptersDrafted - 1, display: `${d.progress.chaptersPlanned - d.progress.chaptersDrafted - 1} chapters` },
             ],
           },
           {
             type: "kanban",
-            title: "Marking queue",
+            title: "Publications",
             icon: "kanban",
-            ask: "Help me plan my marking for this week across the queue, with realistic time estimates.",
+            ask: `I need ${d.requirement.toLowerCase()}. Which journals would suit my retinal screening work, and what should I check before submitting?`,
             columns: [
-              { title: "To mark", tone: "warn", cards: [{ title: "Group assignment drafts", meta: "Database Systems · 12 groups" }, { title: "OOP lab portfolio", meta: "34 submissions" }] },
-              { title: "In progress", tone: "info", cards: [{ title: "Quiz 2 short answers", meta: "Database Systems · 60 of 182 marked" }] },
-              { title: "Released", tone: "good", cards: [{ title: "Quiz 1", meta: "182 students · average 72%" }, { title: "Sprint 1 review", meta: "156 students" }] },
+              { title: "Drafting", tone: "warn", cards: [{ title: "Conference abstract: explainable screening", meta: "Supervisor action item" }] },
+              { title: "Under review", tone: "info", cards: d.publications.filter((p) => p.status === "Under review").map((p) => ({ title: p.title, meta: p.venue })) },
+              { title: "Accepted", tone: "good", cards: d.publications.filter((p) => p.status === "Accepted").map((p) => ({ title: p.title, meta: p.venue })) },
             ],
           },
           {
-            type: "cards",
+            type: "list",
+            title: `Supervision actions · next meeting ${inDays(d.supervision.nextMeeting)}`,
+            icon: "users",
+            ask: "Help me prepare an agenda and progress update for my next supervision meeting.",
+            items: d.supervision.actions.map((a, i) => ({
+              title: a,
+              meta: `Agreed ${shortDate(d.supervision.lastMeeting)}`,
+              badge: i === 0 ? "In progress" : "To do",
+              tone: (i === 0 ? "info" : "warn") as Tone,
+              ask: `Help me with this supervision action: ${a.toLowerCase()}. Give me a step-by-step plan.`,
+            })),
+          },
+          {
+            type: "timeline",
+            title: "Key dates",
+            icon: "calendar",
+            items: [
+              ...d.milestones.filter((m) => daysUntil(m.due) > 0).map((m) => ({ title: m.milestone, date: m.due, meta: inDays(m.due), tone: urgency(m.due) })),
+              { title: "Conference allowance: apply 6 weeks before travel", date: daysFromNow(40), meta: `RM ${d.funding.conferenceAllowanceLeft.toLocaleString("en-MY")} left this year`, tone: "info" as Tone, ask: "How do I apply for the conference travel allowance, and what do I need?" },
+            ].sort((a, b) => a.date.localeCompare(b.date)),
+          },
+        ],
+      };
+    }
+
+    case "international": {
+      const d = visaData();
+      const done = d.renewalChecklist.filter((c) => c.done).length;
+      const firstOpen = d.renewalChecklist.findIndex((c) => !c.done);
+      const submitBy = daysFromNow(d.studentPass.daysUntilExpiry - 30);
+      return {
+        greeting: `Welcome, ${d.profile.name}`,
+        subtitle: `${d.profile.programme} · Year ${d.profile.year} · ${d.profile.nationality}`,
+        kpis: [
+          { label: "Student Pass expires", value: inDays(d.studentPass.expiresOn), detail: shortDate(d.studentPass.expiresOn), icon: "globe", tone: d.studentPass.daysUntilExpiry <= 60 ? "bad" : "warn" },
+          { label: "Renewal checklist", value: `${done} of ${d.renewalChecklist.length}`, detail: `status: ${d.studentPass.renewalStatus.toLowerCase()}`, icon: "check", tone: "warn" },
+          { label: "Attendance", value: `${d.attendance}%`, detail: "minimum 80% for renewal", icon: "chart", tone: d.attendance >= 80 ? "good" : "bad" },
+          { label: "Medical insurance", value: inDays(d.insurance.expiresOn), detail: "ends with your pass", icon: "shield", tone: "warn" },
+        ],
+        widgets: [
+          {
+            type: "stepper",
+            title: "Student Pass renewal",
+            icon: "flag",
+            subtitle: `Submit by ${shortDate(submitBy)} to be safe · expires ${shortDate(d.studentPass.expiresOn)}`,
+            ask: "Walk me through renewing my Student Pass step by step, with deadlines.",
+            steps: d.renewalChecklist.map((c, i) => ({ label: c.step, meta: c.detail, status: (c.done ? "done" : i === firstOpen ? "current" : "todo") as "done" | "current" | "todo" })),
+          },
+          {
+            type: "donut",
+            title: "Renewal readiness",
+            icon: "pie",
+            centerValue: `${Math.round((done / d.renewalChecklist.length) * 100)}%`,
+            centerLabel: "ready",
+            note: d.support,
+            ask: "What should I do first to finish my Student Pass renewal?",
+            segments: [
+              { label: "Done", value: done, display: `${done} steps` },
+              { label: "Still to do", value: d.renewalChecklist.length - done, display: `${d.renewalChecklist.length - done} steps` },
+            ],
+          },
+          {
+            type: "timeline",
+            title: "Visa dates",
+            icon: "calendar",
+            items: [
+              { title: "Recommended submission date", date: submitBy, meta: "30 days before expiry", tone: urgency(submitBy), ask: "Why should I submit my renewal 30 days before expiry, and what happens if I'm late?" },
+              { title: "Medical insurance expires", date: d.insurance.expiresOn, meta: inDays(d.insurance.expiresOn), tone: urgency(d.insurance.expiresOn), ask: "How do I renew my student medical insurance?" },
+              { title: "Student Pass expires", date: d.studentPass.expiresOn, meta: inDays(d.studentPass.expiresOn), tone: urgency(d.studentPass.expiresOn) },
+            ],
+          },
+          {
+            type: "bars",
+            title: "Attendance by module",
+            icon: "chart",
+            threshold: 80,
+            ask: "Which modules should I watch to keep my attendance above 80% for my visa renewal?",
+            items: [
+              { label: "Requirements Engineering", value: 92, tone: "good" },
+              { label: "Programming with Java", value: 88, tone: "good" },
+              { label: "Discrete Mathematics", value: 82, tone: "warn" },
+              { label: "Communication Skills", value: 85, tone: "good" },
+            ],
+          },
+          {
+            type: "list",
+            title: "Settling in",
+            icon: "pin",
+            items: [
+              { title: "Open a local bank account", meta: "Bring your passport and offer letter", badge: "Guide", tone: "info", ask: "How do I open a bank account in Malaysia as an international student?" },
+              { title: "Get a local SIM card", meta: "Register with your passport", badge: "Guide", tone: "info", ask: "Which documents do I need for a Malaysian SIM card?" },
+              { title: "Panel clinics near campus", meta: "Covered by your student insurance", badge: "Health", tone: "good", ask: "Where can I see a doctor near campus with my student insurance?" },
+              { title: "Part-time work rules", meta: "Check before taking any job", badge: "Important", tone: "warn", ask: "Can international students work part-time in Malaysia, and what are the rules?" },
+            ],
+          },
+        ],
+      };
+    }
+
+    case "masters": {
+      const d = mastersData();
+      const current = d.dissertation.find((s) => s.status === "current");
+      const inProgress = d.modules.filter((m) => m.status === "In progress").reduce((n, m) => n + m.credits, 0);
+      const toSat = (6 - new Date().getDay() + 7) % 7;
+      return {
+        greeting: `Welcome back, ${d.profile.name}`,
+        subtitle: `${d.profile.programme} · ${d.profile.mode} · Semester ${d.profile.semester}`,
+        kpis: [
+          { label: "Credits earned", value: `${d.credits.earned} of ${d.credits.required}`, detail: `${inProgress} more in progress`, icon: "award", tone: "info" },
+          { label: "CGPA", value: d.cgpa.toFixed(2), detail: "distinction track", icon: "trend", tone: "good" },
+          { label: "Dissertation", value: current?.due ? inDays(current.due) : "On track", detail: current?.step ?? "", icon: "doc", tone: current?.due ? urgency(current.due) : "good" },
+          { label: "Fees", value: d.fees.outstanding ? rm(d.fees.outstanding) : "Paid", detail: d.fees.employerSponsored ? "employer-sponsored" : "this semester", icon: "wallet", tone: "good" },
+        ],
+        widgets: [
+          {
+            type: "stepper",
+            title: "Dissertation",
+            icon: "flag",
+            subtitle: "Proposal approval comes before any data collection",
+            ask: "Help me finish my dissertation proposal: what should each section contain?",
+            steps: d.dissertation.map((s) => ({ label: s.step, meta: s.due ? `Due ${shortDate(s.due)}` : undefined, status: s.status as "done" | "current" | "todo" })),
+          },
+          {
+            type: "donut",
+            title: "Credits to graduate",
+            icon: "pie",
+            centerValue: `${Math.round((d.credits.earned / d.credits.required) * 100)}%`,
+            centerLabel: "earned",
+            note: `${d.credits.required} credits including the dissertation`,
+            ask: "How many credits do I still need, and how long will it take part-time?",
+            segments: [
+              { label: "Earned", value: d.credits.earned, display: `${d.credits.earned} credits` },
+              { label: "In progress", value: inProgress, display: `${inProgress} credits` },
+              { label: "Remaining", value: d.credits.required - d.credits.earned - inProgress, display: `${d.credits.required - d.credits.earned - inProgress} credits` },
+            ],
+          },
+          {
+            type: "timeline",
+            title: "This weekend's classes",
+            icon: "calendar",
+            items: d.weekendClasses.map((c) => ({
+              title: c.module,
+              date: daysFromNow(toSat + (c.day === "Sunday" ? 1 : 0)),
+              meta: `${c.day} ${c.start}–${c.end} · ${c.room}`,
+              tone: "info" as Tone,
+              ask: `Give me a 30-minute prep plan for this weekend's ${c.module} class.`,
+            })),
+          },
+          {
+            type: "list",
             title: "My modules",
             icon: "book",
-            items: t.modules.map((m) => ({
-              title: `${m.code} ${m.name}`,
-              subtitle: `${m.cohort} students`,
-              tag: `${m.assessments.length} assessments`,
-              lines: m.learningOutcomes.map((o) => `• ${o}`),
-              ask: `Suggest three active-learning activities for next week's ${m.name} class, aligned to these learning outcomes: ${m.learningOutcomes.join("; ")}.`,
+            items: d.modules.map((m) => ({
+              title: m.module,
+              meta: `${m.credits} credits · ${m.status}`,
+              badge: m.grade === "–" ? "In progress" : m.grade,
+              tone: (m.grade === "–" ? "info" : "good") as Tone,
+              ask: m.grade === "–" ? `Help me plan my study for ${m.module} around full-time work.` : undefined,
             })),
-          },
-          {
-            type: "timeline",
-            title: "Assessment calendar",
-            icon: "calendar",
-            items: assessments.map((a) => ({
-              title: a.name,
-              date: a.due,
-              meta: `${a.module} · ${a.weight} · ${inDays(a.due)}`,
-              badge: a.aiLevel,
-              tone: urgency(a.due),
-              ask: `Write a short, clear brief for students for "${a.name}" (${a.module}, ${a.weight}), stating the GenAI level "${a.aiLevel}" and what that allows.`,
-            })),
-          },
-        ],
-      };
-    }
-
-    case "staff": {
-      const s = staffData();
-      const tickets = listTickets();
-      const docs = listDocuments(PERSONAS.staff.audiences);
-      const open = tickets.filter((t) => t.status !== "Closed");
-      const card = (t: (typeof tickets)[number]) => ({ title: t.title, meta: `${t.ticketId} · ${t.category}${t.priority === "high" ? " · high priority" : ""}` });
-      const available = s.leave.entitled - s.leave.taken - s.leave.pending;
-      return {
-        greeting: `Hello, ${s.name}`,
-        subtitle: `${s.department} · policies, requests and approvals in one place`,
-        kpis: [
-          { label: "Open tickets", value: String(open.length), detail: `${open.filter((t) => t.priority === "high").length} high priority`, icon: "ticket", tone: open.length ? "warn" : "good" },
-          { label: "Annual leave left", value: `${s.leave.entitled - s.leave.taken} days`, detail: `of ${s.leave.entitled} · ${s.leave.pending} pending`, icon: "sun", tone: "good" },
-          { label: "Awaiting your approval", value: String(s.approvals.length), detail: `next ${inDays(s.approvals[0].due)}`, icon: "check", tone: "warn" },
-          { label: "Policies available", value: String(docs.length), detail: "searchable by the assistant", icon: "book", tone: "info" },
-        ],
-        widgets: [
-          {
-            type: "kanban",
-            title: "Service tickets",
-            icon: "ticket",
-            ask: "Summarise my open service tickets and suggest which to chase first.",
-            columns: [
-              { title: "Open", tone: "warn", cards: tickets.filter((t) => t.status === "Open").map(card) },
-              { title: "In progress", tone: "info", cards: tickets.filter((t) => t.status === "In progress").map(card) },
-              {
-                title: "Resolved this week",
-                tone: "good",
-                cards: [
-                  { title: "Printer jam on Level 3", meta: "DEMO-102114 · Facilities" },
-                  { title: "VPN access for new hire", meta: "DEMO-101987 · IT" },
-                ],
-              },
-            ],
-          },
-          {
-            type: "stepper",
-            title: "Purchase requisition PR-2041",
-            icon: "flag",
-            subtitle: "Lab consumables · RM 3,400",
-            ask: "What happens at the Finance check for a RM 3,400 purchase, and how long does it usually take?",
-            steps: [
-              { label: "Raised", meta: shortDate(daysFromNow(-6)), status: "done" },
-              { label: "Head of department", meta: "Approved", status: "done" },
-              { label: "Finance check", meta: "3 quotations attached", status: "current" },
-              { label: "Procurement", status: "todo" },
-              { label: "Order placed", status: "todo" },
-            ],
-          },
-          {
-            type: "donut",
-            title: "Annual leave",
-            icon: "sun",
-            centerValue: String(s.leave.entitled - s.leave.taken),
-            centerLabel: "days left",
-            note: "Up to 5 unused days carry forward to 31 March.",
-            ask: "How many leave days can I carry forward and when must I use them?",
-            segments: [
-              { label: "Taken", value: s.leave.taken, display: `${s.leave.taken} days` },
-              { label: "Pending approval", value: s.leave.pending, display: `${s.leave.pending} days` },
-              { label: "Available", value: available, display: `${available} days` },
-            ],
-          },
-          {
-            type: "columns",
-            title: "Requests resolved per week",
-            icon: "trend",
-            note: "Team throughput, last 6 weeks",
-            items: [
-              { label: "W1", value: 14 },
-              { label: "W2", value: 18 },
-              { label: "W3", value: 11 },
-              { label: "W4", value: 22 },
-              { label: "W5", value: 19 },
-              { label: "W6", value: 25, highlight: true },
-            ],
           },
           {
             type: "list",
-            title: "Awaiting your approval",
-            icon: "check",
-            items: s.approvals.map((a) => ({ title: a.title, meta: `${a.from} · due ${inDays(a.due)}`, tone: urgency(a.due) })),
-          },
-          {
-            type: "list",
-            title: "Policies and procedures",
-            icon: "book",
-            items: docs.map((d) => ({
-              title: d.title,
-              meta: `${d.owner} · ${d.sections.length} sections`,
-              ask: `Summarise the "${d.title}" policy in 5 bullet points for a busy staff member.`,
-            })),
-          },
-          {
-            type: "timeline",
-            title: "Coming up",
-            icon: "calendar",
-            items: s.calendar.map((c) => ({ title: c.title, date: c.date, meta: inDays(c.date), tone: urgency(c.date) })),
-          },
-        ],
-      };
-    }
-
-    case "researcher": {
-      const r = researchData();
-      const total = r.activeGrants.reduce((n, g) => n + g.amount, 0);
-      const nextReport = [...r.activeGrants].sort((a, b) => a.nextReport.localeCompare(b.nextReport))[0];
-      const seed = r.matchingCalls[0];
-      return {
-        greeting: `Welcome, ${r.researcher}`,
-        subtitle: r.area,
-        kpis: [
-          { label: "Active grants", value: String(r.activeGrants.length), detail: "as principal investigator", icon: "flask", tone: "good" },
-          { label: "Funding managed", value: rm(total), detail: "across active grants", icon: "wallet", tone: "info" },
-          { label: "Next progress report", value: inDays(nextReport.nextReport), detail: nextReport.title, icon: "flag", tone: urgency(nextReport.nextReport) },
-          { label: "Matching calls", value: String(r.matchingCalls.length), detail: "closing in the next 90 days", icon: "target", tone: "warn" },
-        ],
-        widgets: [
-          {
-            type: "donut",
-            title: "Grant budget: retinopathy study",
-            icon: "pie",
-            centerValue: "42%",
-            centerLabel: "spent",
-            note: "RM 98,000 total · project 55% complete",
-            ask: "My grant is 42% spent at 55% project progress. Is that on track, and what should I watch for the rest of the project?",
-            segments: [
-              { label: "Spent", value: 41200, display: "RM 41,200" },
-              { label: "Committed", value: 18500, display: "RM 18,500" },
-              { label: "Remaining", value: 38300, display: "RM 38,300" },
-            ],
-          },
-          {
-            type: "stepper",
-            title: `Proposal: ${seed.call}`,
-            icon: "flag",
-            subtitle: `Internal deadline ${inDays(seed.internalDeadline)} · up to ${seed.maxAmount}`,
-            ask: `Help me finish the methodology section of my proposal for the ${seed.call}.`,
-            steps: [
-              { label: "Idea and fit check", meta: "Done with Research Office", status: "done" },
-              { label: "Draft", meta: "Methodology in progress", status: "current" },
-              { label: "Internal review", meta: "Mock panel booked", status: "todo" },
-              { label: "Budget sign-off", status: "todo" },
-              { label: "Submit", status: "todo" },
-            ],
-          },
-          {
-            type: "kanban",
-            title: "Publication pipeline",
-            icon: "kanban",
-            ask: "Which journals would suit my draft on federated learning for retinal imaging, and what should I check before submitting?",
-            columns: [
-              { title: "Drafting", tone: "warn", cards: [{ title: "Federated learning for retinal imaging", meta: "Target: Q1 journal" }] },
-              { title: "Under review", tone: "info", cards: [{ title: "Explainable triage chatbot for clinics", meta: "Journal · round 1 reviews" }] },
-              { title: "Accepted", tone: "good", cards: [{ title: "Lightweight CNN for fundus images", meta: "Conference paper" }, { title: "Dataset note: Malaysian fundus images", meta: "Data paper" }] },
-            ],
-          },
-          {
-            type: "columns",
-            title: "Citations per year",
-            icon: "trend",
-            note: "Sample profile · 97 citations in total",
-            items: [
-              { label: "2022", value: 11 },
-              { label: "2023", value: 19 },
-              { label: "2024", value: 31 },
-              { label: "2025", value: 36, highlight: true },
-            ],
-          },
-          {
-            type: "timeline",
-            title: "Funding calls closing",
+            title: "Careers and networking",
             icon: "target",
-            items: r.matchingCalls.map((c) => ({
-              title: c.call,
-              date: c.internalDeadline,
-              meta: `Up to ${c.maxAmount} · internal deadline ${inDays(c.internalDeadline)}`,
-              tone: urgency(c.internalDeadline),
-              ask: `Help me decide whether to apply to "${c.call}" (up to ${c.maxAmount}) with my research area, ${r.area}. What would a strong angle be?`,
-            })),
-          },
-          {
-            type: "cards",
-            title: "Active grants",
-            icon: "flask",
-            items: r.activeGrants.map((g) => ({
-              title: g.title,
-              subtitle: `${g.funder} · ${rm(g.amount)}`,
-              tag: `ends ${g.ends}`,
-              progress: g.progress,
-              lines: [`Next progress report ${inDays(g.nextReport)} (${g.nextReport})`],
-              ask: `Draft an outline for the progress report on "${g.title}" (${g.progress}% complete): achievements, issues, next milestones.`,
-            })),
-          },
-          {
-            type: "list",
-            title: "Ethics approvals",
-            icon: "shield",
-            items: r.ethicsApprovals.map((e) => ({ title: e.project, meta: `expires ${e.expires}`, badge: e.status, tone: "good" as Tone })),
+            items: [
+              { title: "Data analyst roles at partner companies", meta: "Career Centre job board", badge: "12 open", tone: "good", ask: "What data analyst roles suit an MSc Data Science student, and how should I tailor my CV?" },
+              { title: "CV and LinkedIn clinic", meta: `${shortDate(daysFromNow(10))} · Online`, badge: "Event", tone: "info", ask: "Review how I should present my Master's projects on my CV and LinkedIn." },
+              { title: "Industry talk: analytics in banking", meta: `${shortDate(daysFromNow(17))} · PG Suite 1`, badge: "Event", tone: "info" },
+            ],
           },
         ],
       };
     }
   }
 }
-

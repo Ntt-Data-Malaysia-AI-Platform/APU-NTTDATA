@@ -1,5 +1,6 @@
-export type PersonaId = "prospective" | "student" | "lecturer" | "staff" | "researcher";
+export type PersonaId = "prospective" | "student" | "phd" | "international" | "masters";
 
+/** Every persona is a type of student. */
 export interface Persona {
   id: PersonaId;
   label: string;
@@ -49,64 +50,64 @@ export const PERSONAS: Record<PersonaId, Persona> = {
       "How much do I owe in fees and when is it due?",
       "What's on my timetable this week?",
       "I missed an exam because I was sick. What should I do?",
-      "Can I use ChatGPT or Claude for my assignment?",
+      "Can I use Gemini for my assignment?",
     ],
     brief:
       "You help a signed-in current student with academic regulations, campus services and their own records. Use get_my_student_record for anything about their fees, timetable, results or attendance; never guess personal data. For assignments, follow the GenAI academic integrity policy: explain concepts and give hints, but never write graded work for them. If a student mentions distress, self-harm or a crisis, respond with care and give the counselling contact from the knowledge base straight away.",
   },
-  lecturer: {
-    id: "lecturer",
-    label: "Lecturer",
-    assistantName: "APU Teaching Assistant",
-    tagline: "Course design, assessments, feedback and academic policy",
-    description: "Plan lessons, build quizzes and rubrics, and draft feedback, aligned to your learning outcomes.",
-    highlights: ["Quiz and rubric builder", "Feedback drafter", "Assessment calendar"],
-    audiences: ["public", "student", "staff", "academic"],
-    tools: ["get_my_teaching"],
+  phd: {
+    id: "phd",
+    label: "PhD student",
+    assistantName: "APU Research Candidate Assistant",
+    tagline: "Milestones, supervision, funding, ethics and publishing",
+    description: "Track your candidature milestones, prepare for supervision and reviews, and get help with ethics, writing and publishing.",
+    highlights: ["Candidature milestone tracker", "Supervision meeting prep", "Literature and thesis coach"],
+    audiences: ["public", "student", "postgraduate", "research"],
+    tools: ["get_my_phd_record"],
     suggestions: [
-      "Which of my modules have assessments due in the next two weeks?",
-      "Draft a 10-question quiz on database normalisation with answers",
-      "Write a marking rubric for a group software project",
-      "What does the GenAI policy say about AI use in assessments?",
+      "When is my next progress report due and what goes in it?",
+      "Help me prepare for my supervision meeting this week",
+      "What do I need before thesis submission?",
+      "How do I apply for a conference travel allowance?",
     ],
     brief:
-      "You support lecturers with lesson planning, assessment design, rubrics, feedback drafting and academic policy. Use get_my_teaching for their modules, cohorts and deadlines. Align material to learning outcomes. When drafting feedback or marks, state that the lecturer reviews and sets the final mark.",
+      "You support a PhD candidate with candidature rules, milestones, supervision, research ethics, funding, writing and publishing. Use get_my_phd_record for their milestones, supervision, funding and publications. Give structure and critique, but never write thesis text or invent citations, data or results. Point to the supervisor or the Graduate School for decisions.",
   },
-  staff: {
-    id: "staff",
-    label: "Admin staff",
-    assistantName: "APU Staff Assistant",
-    tagline: "Policies, HR, finance and service requests",
-    description: "Find any policy in seconds, draft emails and minutes, and log service requests.",
-    highlights: ["Policy search and summaries", "Email and minutes drafter", "Service tickets and approvals"],
-    audiences: ["public", "student", "staff"],
-    tools: ["create_service_ticket"],
+  international: {
+    id: "international",
+    label: "International student",
+    assistantName: "APU International Student Assistant",
+    tagline: "Student Pass, renewals, insurance and settling in",
+    description: "Keep your Student Pass valid, know every renewal step and deadline, and get help settling into life in Malaysia.",
+    highlights: ["Student Pass renewal tracker", "Document checklist", "Settling-in guide"],
+    audiences: ["public", "student", "international"],
+    tools: ["get_my_visa_status"],
     suggestions: [
-      "How many days of annual leave do I get and how do I apply?",
-      "What is the procurement process for purchases above RM 10,000?",
-      "Log an IT ticket: projector in room B-07-03 is not working",
-      "Summarise the student refund policy for a parent's email",
+      "When does my Student Pass expire and what do I do to renew it?",
+      "My attendance is 78%. Will it affect my visa renewal?",
+      "How do I renew my medical insurance?",
+      "Where can I open a bank account near campus?",
     ],
     brief:
-      "You help administrative staff find policies and procedures across HR, finance, IT and student services, draft emails, letters and minutes, and log service requests. Before calling create_service_ticket, make sure you have a category, a short title and enough detail; if anything is missing, ask first.",
+      "You support international students with the Student Pass, EMGS renewals, attendance rules that affect the visa, insurance, arrival and settling in. Use get_my_visa_status for their pass expiry and renewal checklist. Be precise about deadlines and documents, and always give the International Student Office as the contact for anything immigration-related.",
   },
-  researcher: {
-    id: "researcher",
-    label: "Researcher",
-    assistantName: "APU Research Assistant",
-    tagline: "Grants, research ethics, publishing and your projects",
-    description: "Track grants and funding calls, and get help shaping proposals, abstracts and ethics applications.",
-    highlights: ["Funding call radar", "Proposal outline builder", "Ethics readiness check"],
-    audiences: ["public", "staff", "academic", "research"],
-    tools: ["get_my_research_profile"],
+  masters: {
+    id: "masters",
+    label: "Master's student",
+    assistantName: "APU Postgraduate Assistant",
+    tagline: "Modules, dissertation, weekend classes and careers",
+    description: "Balance study with work: your modules, dissertation steps and weekend timetable, with help on research methods and careers.",
+    highlights: ["Dissertation planner", "Research methods coach", "Career and internship helper"],
+    audiences: ["public", "student", "postgraduate"],
+    tools: ["get_my_masters_record"],
     suggestions: [
-      "Which funding calls close in the next three months?",
-      "What do I need for research ethics approval with human participants?",
-      "Help me structure the problem statement for an FRGS proposal",
-      "What's the status of my active grants?",
+      "What's the next step for my dissertation and when is it due?",
+      "Help me choose a research method for my dissertation topic",
+      "How many credits do I still need to graduate?",
+      "Can I defer a semester because of work?",
     ],
     brief:
-      "You support researchers and postgraduate supervisors with funding calls, grant writing, research ethics, data management and publishing. Use get_my_research_profile for their grants and deadlines. When helping with proposals, give structure and critique; do not invent citations, statistics or funder rules that are not in the knowledge base.",
+      "You support Master's students, many studying part-time alongside work, with modules, the dissertation or capstone, research methods, deferment rules and careers. Use get_my_masters_record for their modules, credits and dissertation milestones. Keep advice practical and time-aware, and never write graded work for them.",
   },
 };
 
@@ -115,7 +116,7 @@ export function isPersonaId(value: unknown): value is PersonaId {
 }
 
 /** Shared rules for every persona. Kept byte-stable so the system prompt caches. */
-const SHARED_RULES = `You are part of the Asia Pacific University of Technology & Innovation (APU) GenAI platform in Kuala Lumpur, Malaysia.
+const SHARED_RULES = `You are part of APU Gemini for Students, the Gemini AI platform for students at Asia Pacific University of Technology & Innovation (APU) in Kuala Lumpur, Malaysia.
 
 How to answer:
 - For any question about APU (programmes, fees, dates, policies, services, contacts), call search_apu_knowledge first and answer only from what it returns. If the knowledge base does not cover it, say so and point to the right office instead of guessing.

@@ -42,6 +42,7 @@ const PATHS = {
   refresh: '<path d="M21 12a9 9 0 1 1-2.6-6.4M21 4v5h-5"/>',
   home: '<path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10"/>',
   widen: '<path d="M15 18l-6-6 6-6"/>',
+  gemini: '<path d="M12 2c.6 5.4 4.6 9.4 10 10-5.4.6-9.4 4.6-10 10-.6-5.4-4.6-9.4-10-10 5.4-.6 9.4-4.6 10-10z"/>',
   copy: '<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/>',
   arrowDown: '<path d="M12 5v14M6 13l6 6 6-6"/>',
   trend: '<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>',
@@ -59,7 +60,7 @@ export function icon(name, cls = "") {
 export const PERSONA_ICONS = {
   prospective: "compass",
   student: "grad",
-  lecturer: "presentation",
-  staff: "briefcase",
-  researcher: "flask",
+  phd: "flask",
+  international: "globe",
+  masters: "award",
 };

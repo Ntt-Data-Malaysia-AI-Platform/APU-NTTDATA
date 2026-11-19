@@ -1,21 +1,26 @@
-# APU GenAI Assistant
+# APU Gemini for Students
 
-A working first slice of the [APU GenAI Solution Draft](https://claude.ai/code/artifact/ae5cd312-7e28-481b-9172-62d802b8ad3d), delivered by NTT DATA. It runs on Cloud Run and calls Claude on Vertex AI.
+**Gemini AI for Education Reimagined – Students.** Personal AI workspaces for every kind of student at Asia Pacific University, delivered by NTT DATA.
 
-- **Sign-in screen:** every page and API requires a login. The built-in demo login is set in `server/config.ts`; override it with `APP_USERNAME` / `APP_PASSWORD`.
-- **Landing page:** introduces the platform; you choose one of five personas.
-- **Persona workspace:** a live dashboard (KPIs, timeline, attendance, grants, tickets…) plus four **one-click AI tools** per persona, such as a quiz generator, study planner, email drafter or proposal outline. Click any dashboard item marked *Ask AI* to get help with it.
-- **Docked assistant:** a chat panel on the right (a drawer on phones) grounded in APU documents, with sources. Switch persona from the dropdown at the top right.
+**Live demo:** https://ntt-data-malaysia-ai-platform.github.io/APU-NTTDATA/ (static demo mode)
 
-| Persona | Assistant | What it can do |
+- **Sign-in screen:** every page requires a login. The built-in demo login is set in `server/config.ts`; override it with `APP_USERNAME` / `APP_PASSWORD`.
+- **Landing page:** introduces the platform; you choose one of five student types.
+- **Student workspace:** a live dashboard (timetable, fees, milestones, Student Pass renewal, credits…) plus four **one-click AI tools** per student type. Click any dashboard item marked *Ask AI* to get help with it.
+- **Docked assistant:** a chat panel on the right (a drawer on phones) grounded in APU documents, with sources. Answers read from the top down. Switch student type from the dropdown at the top right.
+
+| Student type | Assistant | What it can do |
 | --- | --- | --- |
 | Prospective student | APU Admissions Assistant | Programmes, entry requirements, intakes, scholarships, visas |
-| Current student | APU Student Assistant | Plus the student's own fees, timetable, results and attendance |
-| Lecturer | APU Teaching Assistant | Their modules and deadlines, quizzes, rubrics, feedback drafts, GenAI policy |
-| Admin staff | APU Staff Assistant | HR, finance and IT policies, drafting, logging service tickets |
-| Researcher | APU Research Assistant | Funding calls, grants, ethics, proposal structure |
+| Current student | APU Student Assistant | The student's own fees, timetable, results and attendance; study planner, concept tutor |
+| PhD student | APU Research Candidate Assistant | Candidature milestones, supervision prep, funding, ethics, publications, literature search |
+| International student | APU International Student Assistant | Student Pass expiry and renewal steps, attendance rules, insurance, settling in |
+| Master's student | APU Postgraduate Assistant | Modules and credits, dissertation steps, weekend classes, research methods, careers |
 
-Switching persona starts a new conversation and changes the assistant's role, its tools and **which documents it may read**. For example, a student can't retrieve HR policies.
+Switching student type starts a new conversation and changes the assistant's role, its tools and **which documents it may read**. For example, only PhD and Master's students can read the postgraduate rules.
+
+The Pages demo runs entirely in the browser (no model). The optional Cloud Run backend in `server/` still calls Claude on Vertex AI; swap it for Gemini on Vertex AI to match the branding.
+
 
 ## How it works
 
