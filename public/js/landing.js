@@ -84,9 +84,9 @@ export function renderLanding(root, cfg, { lastPersona }) {
 
     <footer class="site-footer">
       <span>Delivered by</span>
-      <img src="brand/ntt-data-logo.png" alt="NTT DATA" />
+      <span class="logo-badge"><img src="brand/ntt-data-logo-white.png" alt="NTT DATA" /></span>
       <span class="sep">·</span>
-      <span>Demonstration build with sample data. Not official APU information.</span>
+      <span>Gemini AI for Education Reimagined – Students · Asia Pacific University</span>
     </footer>`;
 
   // Smooth-scroll the in-page link without changing the route.

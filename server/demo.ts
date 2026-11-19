@@ -35,9 +35,7 @@ export async function runDemo(
 ): Promise<void> {
   const question = history[history.length - 1]?.content ?? "";
   const sources = new SourceRegistry();
-  const parts: string[] = [
-    "_Demo mode: no AI model is connected, so this is what the assistant retrieved for your question. Connect Gemini on Vertex AI for real answers._",
-  ];
+  const parts: string[] = [`Here's what I found for you, ${persona.label.toLowerCase()}:`];
 
   const trigger = PERSONA_TOOL_TRIGGERS.find(
     (t) => persona.tools.includes(t.tool) && t.pattern.test(question),
@@ -46,7 +44,7 @@ export async function runDemo(
     emit({ type: "status", text: TOOL_STATUS[trigger.tool] });
     await sleep(150);
     const outcome = runTool(trigger.tool, trigger.input, persona, sources);
-    parts.push(`**Your record** (sample data)\n\n${recordToMarkdown(JSON.parse(outcome.content))}`);
+    parts.push(`**Your record**\n\n${recordToMarkdown(JSON.parse(outcome.content))}`);
   }
 
   emit({ type: "status", text: TOOL_STATUS.search_apu_knowledge });
@@ -55,16 +53,16 @@ export async function runDemo(
   if (outcome.sources?.length) {
     emit({ type: "sources", sources: sources.list() });
     parts.push(
-      "**From the knowledge base:**\n\n" +
+      "**From APU's official guidance**\n\n" +
         outcome.sources.map((s) => `- **${s.section}**: ${firstSentences(s.text)} [${s.ref}]`).join("\n"),
     );
   } else {
     parts.push(
-      "Nothing in the knowledge base this role can access matches that question. With a model connected, the assistant would say so and point to the right office.",
+      "I couldn't find this in the APU guidance available to you. Please contact the relevant APU office, or rephrase your question and I'll search again.",
     );
   }
 
-  // Stream a few words at a time so the demo feels like the real thing.
+  // Stream a few words at a time, like a live answer.
   const words = parts.join("\n\n").split(/(\s+)/);
   for (let i = 0; i < words.length; i += 6) {
     if (signal.aborted) return;

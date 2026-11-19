@@ -24,7 +24,6 @@ const els = {
   userName: $("user-name"),
   userInitial: $("user-initial"),
   logoutBtn: $("logout"),
-  badge: $("mode-badge"),
   fab: $("fab"),
   scrim: $("scrim"),
   dialog: $("tool-dialog"),
@@ -223,7 +222,6 @@ window.addEventListener("hashchange", route);
 async function startApp(user) {
   if (!cfg) {
     cfg = await getConfig();
-    els.badge.hidden = !cfg.demoMode;
     els.select.replaceChildren(
       ...cfg.personas.map((p) => {
         const o = document.createElement("option");

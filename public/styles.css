@@ -1,26 +1,33 @@
 /* ==========================================================================
-   APU GenAI Platform: colourful glass theme
+   APU Gemini for Students: NTT DATA royal blue and white theme
    Any element with data-persona gets that persona's three gradient stops
    (--g1..--g3); every colour below derives from them.
    ========================================================================== */
 
 :root {
-  --bg: #f5f6fb;
-  --surface: rgba(255, 255, 255, 0.74);
+  /* NTT DATA brand blues */
+  --ntt-blue: #0072bc;      /* matches the logo background exactly */
+  --ntt-royal: #002b7f;
+  --ntt-navy: #001a4d;
+  --ntt-sky: #3fa9f5;
+  --ntt-ice: #e8f2fb;
+
+  --bg: #f6f9fd;
+  --surface: rgba(255, 255, 255, 0.86);
   --surface-solid: #ffffff;
-  --surface-2: rgba(240, 242, 250, 0.92);
-  --border: rgba(20, 24, 60, 0.09);
-  --text: #121530;
-  --text-2: #5a6080;
-  --code-bg: rgba(20, 24, 60, 0.05);
-  --shadow-sm: 0 1px 2px rgba(20, 24, 60, 0.05), 0 2px 10px rgba(20, 24, 60, 0.05);
-  --shadow-lg: 0 18px 40px -16px rgba(20, 24, 60, 0.22), 0 4px 12px -6px rgba(20, 24, 60, 0.08);
-  --blur: saturate(160%) blur(18px);
+  --surface-2: #eef4fb;
+  --border: rgba(0, 43, 127, 0.11);
+  --text: #0b1a3a;
+  --text-2: #4b5d80;
+  --code-bg: rgba(0, 43, 127, 0.05);
+  --shadow-sm: 0 1px 2px rgba(0, 43, 127, 0.06), 0 2px 10px rgba(0, 43, 127, 0.06);
+  --shadow-lg: 0 18px 40px -16px rgba(0, 43, 127, 0.28), 0 4px 12px -6px rgba(0, 43, 127, 0.1);
+  --blur: saturate(140%) blur(16px);
   --radius: 18px;
-  --good: #059669;
-  --warn: #d97706;
-  --bad: #e11d48;
-  --header-h: 66px;
+  --good: #0f8a5f;
+  --warn: #c77700;
+  --bad: #d22c4b;
+  --header-h: 68px;
   --font: "Segoe UI Variable", "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
   --mono: "Cascadia Code", Consolas, "SF Mono", Menlo, monospace;
   color-scheme: light;
@@ -28,38 +35,38 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0b0d1a;
-    --surface: rgba(22, 25, 46, 0.7);
-    --surface-solid: #161a2e;
-    --surface-2: rgba(32, 36, 62, 0.92);
-    --border: rgba(200, 210, 255, 0.1);
-    --text: #eef0ff;
-    --text-2: #a3a9c8;
-    --code-bg: rgba(200, 210, 255, 0.07);
+    --bg: #04122e;
+    --surface: rgba(8, 30, 74, 0.78);
+    --surface-solid: #0a2250;
+    --surface-2: #0e2a60;
+    --border: rgba(160, 200, 255, 0.14);
+    --text: #eef5ff;
+    --text-2: #a9bddc;
+    --code-bg: rgba(160, 200, 255, 0.08);
     --shadow-sm: none;
-    --shadow-lg: 0 18px 40px -16px rgba(0, 0, 0, 0.65);
-    --good: #34d399;
-    --warn: #fbbf24;
-    --bad: #fb7185;
+    --shadow-lg: 0 18px 40px -16px rgba(0, 0, 0, 0.6);
+    --good: #3ddc97;
+    --warn: #ffc24b;
+    --bad: #ff7a8f;
     color-scheme: dark;
   }
 }
 
-/* Persona palettes */
-[data-persona="platform"]    { --g1: #6366f1; --g2: #ec4899; --g3: #06b6d4; --accent: #4f46e5; }
-[data-persona="prospective"] { --g1: #06b6d4; --g2: #3b82f6; --g3: #14b8a6; --accent: #0e7490; }
-[data-persona="student"]     { --g1: #6366f1; --g2: #8b5cf6; --g3: #3b82f6; --accent: #4f46e5; }
-[data-persona="phd"]         { --g1: #d946ef; --g2: #8b5cf6; --g3: #f472b6; --accent: #a21caf; }
-[data-persona="international"]{ --g1: #f97316; --g2: #f43f5e; --g3: #f59e0b; --accent: #c2410c; }
-[data-persona="masters"]     { --g1: #10b981; --g2: #0ea5e9; --g3: #84cc16; --accent: #047857; }
+/* Agent palettes: all NTT DATA blues, each a distinct shade */
+[data-persona="platform"]   { --g1: #002b7f; --g2: #0072bc; --g3: #3fa9f5; --accent: #0072bc; }
+[data-persona="prospective"] { --g1: #0072bc; --g2: #0096d6; --g3: #5ec4f2; --accent: #0072bc; }
+[data-persona="student"]     { --g1: #1d3f9e; --g2: #3366cc; --g3: #7ea6f5; --accent: #1d3f9e; }
+[data-persona="international"]{ --g1: #005f8f; --g2: #0090c0; --g3: #45c1e0; --accent: #005f8f; }
+[data-persona="masters"]     { --g1: #0a3a8c; --g2: #1565c0; --g3: #64a8ff; --accent: #0a3a8c; }
+[data-persona="phd"]         { --g1: #14216b; --g2: #2f45b5; --g3: #8a9cff; --accent: #2f45b5; }
 
 @media (prefers-color-scheme: dark) {
-  [data-persona="platform"]    { --accent: #a5b4fc; }
-  [data-persona="prospective"] { --accent: #67e8f9; }
-  [data-persona="student"]     { --accent: #a5b4fc; }
-  [data-persona="phd"]         { --accent: #f0abfc; }
-  [data-persona="international"]{ --accent: #fdba74; }
-  [data-persona="masters"]     { --accent: #6ee7b7; }
+  [data-persona="platform"]   { --accent: #6cc4ff; }
+  [data-persona="prospective"] { --accent: #6cc4ff; }
+  [data-persona="student"]     { --accent: #9db8ff; }
+  [data-persona="international"]{ --accent: #6fd6ef; }
+  [data-persona="masters"]     { --accent: #8cbcff; }
+  [data-persona="phd"]         { --accent: #aab6ff; }
 }
 
 /* Derived values must be declared where the stops are set. */
@@ -1295,3 +1302,136 @@ body[data-view="boot"] .topbar { display: none; }
   border: 1px solid color-mix(in srgb, var(--g2) 35%, transparent);
 }
 .login-tagline .icon { width: 15px; height: 15px; fill: var(--g2); stroke: none; }
+
+/* ==========================================================================
+   NTT DATA royal theme
+   Solid NTT DATA blue header with the white logo, royal-blue sign-in panel,
+   white surfaces and calm blue washes everywhere else.
+   ========================================================================== */
+
+/* Header */
+.topbar {
+  background: var(--ntt-blue);
+  border-bottom: 0;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: 0 8px 28px -14px rgba(0, 26, 77, 0.6);
+}
+.topbar::before { display: none; }
+.partner-logo { height: 44px; padding: 0; background: transparent; border: 0; border-radius: 0; box-shadow: none; }
+.partner-logo:hover { transform: none; opacity: 0.92; }
+.partner-logo img { height: 34px; }
+.divider { background: rgba(255, 255, 255, 0.35); }
+.brand-title { color: #fff; letter-spacing: 0.01em; }
+.brand-sub { color: rgba(255, 255, 255, 0.82); }
+.topbar .badge { color: #fff; background: rgba(255, 255, 255, 0.14); border-color: rgba(255, 255, 255, 0.45); }
+.persona-picker label { color: rgba(255, 255, 255, 0.88); }
+.topbar .select-wrap { padding: 0; background: #fff; box-shadow: 0 6px 18px -10px rgba(0, 0, 0, 0.45); }
+.topbar .select-wrap select { background: #fff; color: var(--ntt-royal); }
+.topbar .chevron { stroke: var(--ntt-blue); }
+.topbar .persona-dot { box-shadow: 0 0 0 3px rgba(0, 114, 188, 0.18); }
+.user-menu { background: rgba(255, 255, 255, 0.12); border-color: rgba(255, 255, 255, 0.3); }
+.user-name { color: #fff; }
+.user-avatar { color: var(--ntt-blue); background: #fff; }
+.user-menu .icon-btn { color: #fff; background: transparent; border-color: rgba(255, 255, 255, 0.4); }
+.user-menu .icon-btn:hover { color: #fff; background: rgba(255, 255, 255, 0.16); border-color: #fff; }
+
+/* Backdrop: white with soft royal-blue washes */
+.blob { opacity: 0.16; filter: blur(90px); }
+.grid {
+  background-image:
+    linear-gradient(rgba(0, 43, 127, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 43, 127, 0.05) 1px, transparent 1px);
+}
+@media (prefers-color-scheme: dark) {
+  .blob { opacity: 0.22; }
+}
+
+/* Headline and hero accents in brand blues */
+.rainbow {
+  background: linear-gradient(90deg, var(--ntt-royal), var(--ntt-blue), var(--ntt-sky), var(--ntt-blue), var(--ntt-royal));
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+@media (prefers-color-scheme: dark) {
+  .rainbow { background-image: linear-gradient(90deg, #8fd0ff, #ffffff, #6cc4ff, #ffffff, #8fd0ff); }
+}
+.orb { background: conic-gradient(from 0deg, #002b7f, #0172bb, #3fa9f5, #a8d8ff, #0172bb, #002b7f); opacity: 0.34; }
+.kicker { color: var(--ntt-blue); border-color: rgba(0, 114, 188, 0.3); }
+.hero-stats dt { background: linear-gradient(135deg, var(--ntt-royal), var(--ntt-blue)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+/* White logo on its own NTT DATA blue badge (sign-in and footer) */
+.logo-badge { display: inline-flex; align-items: center; padding: 12px 18px; border-radius: 14px; background: var(--ntt-blue); }
+.logo-badge img { display: block; height: 30px; }
+.site-footer .logo-badge { padding: 6px 12px; border-radius: 9px; }
+.site-footer .logo-badge img { height: 18px; padding: 0; background: none; border-radius: 0; box-sizing: border-box; }
+
+/* Sign-in: royal-blue brand panel, white card */
+.login-brand {
+  color: #fff;
+  background:
+    radial-gradient(circle at 85% 15%, rgba(63, 169, 245, 0.35) 0, transparent 40%),
+    radial-gradient(circle at 10% 90%, rgba(0, 114, 188, 0.45) 0, transparent 45%),
+    linear-gradient(150deg, var(--ntt-navy) 0%, var(--ntt-royal) 50%, var(--ntt-blue) 100%);
+}
+.login-brand .logo-badge { box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.5); outline: 1px solid rgba(255, 255, 255, 0.18); }
+.login-brand h1 { color: #fff; }
+.login-brand .rainbow { background-image: linear-gradient(90deg, #ffffff, #bfe3ff, #ffffff, #8fd0ff, #ffffff); }
+.login-brand .lead { color: rgba(255, 255, 255, 0.88); }
+.login-points li { color: #fff; }
+.lp-icon { background: rgba(255, 255, 255, 0.14); border: 1px solid rgba(255, 255, 255, 0.28); box-shadow: none; }
+.login-personas span { color: #fff; background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.32); }
+.login-personas span::before { background: #fff; }
+
+@media (max-width: 640px) {
+  .partner-logo { height: 36px; }
+  .partner-logo img { height: 26px; }
+  .logo-badge img { height: 24px; }
+}
+
+/* "Gemini AI for Education Reimagined" tagline on the sign-in panel */
+.login-tagline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  margin: 0;
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+.login-tagline .icon { width: 15px; height: 15px; fill: #fff; stroke: none; }
+
+/* APU mark and partner "×" on blue surfaces */
+.topbar .brand-mark,
+.login-logos .brand-mark { color: var(--ntt-blue); background: #fff; box-shadow: 0 6px 16px -8px rgba(0, 0, 0, 0.45); }
+.login-x { color: rgba(255, 255, 255, 0.7); }
+.login-logos .logo-badge { padding: 10px 16px; }
+.login-logos .logo-badge img { height: 26px; }
+
+/* ==========================================================================
+   Typography: crisp, rich text
+   ========================================================================== */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body {
+  font-size: 15.5px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-kerning: normal;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+}
+h1, h2, h3 { text-wrap: balance; }
+p, li, .lead { text-wrap: pretty; }
+.hero h1, .login-brand h1, .section-head h2, .ws-hero h1 { letter-spacing: -0.03em; }
+.lead { line-height: 1.65; }
+.kpi-value, .hero-stats dt { font-variant-numeric: tabular-nums; }
+.content { line-height: 1.65; }
+.content strong { color: var(--text); }

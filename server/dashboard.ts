@@ -126,7 +126,7 @@ export function dashboardFor(id: PersonaId): Dashboard {
             icon: "pie",
             centerValue: "RM 48.8k",
             centerLabel: "per year",
-            note: "Sample estimate for a Malaysian student living near campus.",
+            note: "Estimate for a Malaysian student living near campus.",
             ask: "Help me plan how to fund my first year at APU, including scholarships, PTPTN and instalments.",
             segments: [
               { label: "Tuition", value: 32000, display: "RM 32,000" },

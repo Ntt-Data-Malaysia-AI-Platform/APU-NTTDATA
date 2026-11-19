@@ -22,7 +22,7 @@ const loginHash = createHash("sha256").update(`${username}\n${password}`).digest
 const knowledgeDir = path.join(root, "knowledge");
 const knowledge = fs
   .readdirSync(knowledgeDir)
-  .filter((name) => name.endsWith(".md"))
+  .filter((name) => name.endsWith(".md") && name.toLowerCase() !== "readme.md")
   .map((name) => ({ name, content: fs.readFileSync(path.join(knowledgeDir, name), "utf8") }));
 
 fs.rmSync(out, { recursive: true, force: true });

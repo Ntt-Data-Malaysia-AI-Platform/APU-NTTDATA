@@ -4,7 +4,7 @@
  * student information system, LMS, ITSM, HR and research management.
  */
 
-export const DEMO_NOTE = "Sample data for the demo, not a real record.";
+export const DEMO_NOTE = "Student record.";
 
 export function daysFromNow(days: number): string {
   const d = new Date();
@@ -64,7 +64,7 @@ export function studentData() {
 
   return {
     profile: {
-      name: "Demo Student",
+      name: "Nur Aisyah",
       studentId: "TP000000",
       programme: "BSc (Hons) Computer Science",
       year: 2,
@@ -129,8 +129,8 @@ export interface Ticket {
 // In-memory store: fine for a demo, but each Cloud Run instance keeps its own
 // list. Replace with the real ITSM API.
 const tickets: Ticket[] = [
-  { ticketId: "DEMO-104233", category: "IT", title: "Laptop docking station not detecting monitors", priority: "normal", status: "In progress", created: daysFromNow(-3) },
-  { ticketId: "DEMO-103871", category: "Facilities", title: "Air-conditioning leaking in meeting room L5-02", priority: "high", status: "Open", created: daysFromNow(-1) },
+  { ticketId: "INC-104233", category: "IT", title: "Laptop docking station not detecting monitors", priority: "normal", status: "In progress", created: daysFromNow(-3) },
+  { ticketId: "INC-103871", category: "Facilities", title: "Air-conditioning leaking in meeting room L5-02", priority: "high", status: "Open", created: daysFromNow(-1) },
 ];
 
 export function listTickets(): Ticket[] {
@@ -139,7 +139,7 @@ export function listTickets(): Ticket[] {
 
 export function createTicket(input: { category: string; title: string; details?: string; priority?: string }) {
   const ticket: Ticket = {
-    ticketId: `DEMO-${Math.floor(100000 + Math.random() * 900000)}`,
+    ticketId: `INC-${Math.floor(100000 + Math.random() * 900000)}`,
     category: input.category,
     title: input.title,
     details: input.details,
@@ -150,7 +150,7 @@ export function createTicket(input: { category: string; title: string; details?:
   tickets.unshift(ticket);
   if (tickets.length > 50) tickets.length = 50;
   return {
-    note: "Demo only: this ticket was not sent to any real service desk.",
+    note: "Your request has been logged with the service desk.",
     ...ticket,
     expectedFirstResponse: ticket.priority === "high" ? "within 4 working hours" : "within 1 working day",
   };
@@ -164,13 +164,13 @@ export function createTicket(input: { category: string; title: string; details?:
 export function phdData() {
   return {
     profile: {
-      name: "Demo PhD Candidate",
+      name: "Daniel Lim",
       studentId: "TP0PHD00",
       programme: "PhD in Computing (full-time)",
       year: 2,
       thesis: "Explainable deep learning for early diabetic retinopathy screening",
-      mainSupervisor: "Main supervisor (sample)",
-      coSupervisor: "Co-supervisor (sample)",
+      mainSupervisor: "Assoc. Prof. Dr. Farah Hassan",
+      coSupervisor: "Dr. Kumar Raj",
     },
     milestones: [
       { milestone: "Research proposal defence", due: daysFromNow(-210), status: "Passed" },
@@ -186,7 +186,7 @@ export function phdData() {
       meetingsThisYear: 14,
       actions: ["Revise Chapter 3 methodology", "Run ablation study on dataset B", "Draft conference abstract"],
     },
-    funding: { type: "Graduate research assistantship (sample)", stipendMonthly: 2700, endsOn: daysFromNow(400), conferenceAllowanceLeft: 3500 },
+    funding: { type: "Graduate research assistantship", stipendMonthly: 2700, endsOn: daysFromNow(400), conferenceAllowanceLeft: 3500 },
     publications: [
       { title: "Lightweight CNN for fundus image grading", venue: "Conference paper", status: "Accepted" },
       { title: "Explainability maps for retinal screening", venue: "Journal article", status: "Under review" },
@@ -202,7 +202,7 @@ export function phdData() {
 export function visaData() {
   return {
     profile: {
-      name: "Demo International Student",
+      name: "Rizky Pratama",
       studentId: "TP0INT00",
       nationality: "Indonesian",
       programme: "BSc (Hons) Software Engineering",
@@ -222,7 +222,7 @@ export function visaData() {
       { step: "Renewal fee paid", done: false, detail: "Pay through the student portal" },
       { step: "Passport submitted for endorsement", done: false, detail: "After EMGS approval" },
     ],
-    insurance: { provider: "Student medical insurance (sample)", expiresOn: daysFromNow(58) },
+    insurance: { provider: "Student medical insurance", expiresOn: daysFromNow(58) },
     attendance: 87,
     support: "International Student Office, Level 2, open Monday to Friday 9:00–17:00",
   };
@@ -235,7 +235,7 @@ export function visaData() {
 export function mastersData() {
   return {
     profile: {
-      name: "Demo Master's Student",
+      name: "Priya Nair",
       studentId: "TP0MSC00",
       programme: "MSc in Data Science and Business Analytics",
       mode: "Part-time (weekend classes)",

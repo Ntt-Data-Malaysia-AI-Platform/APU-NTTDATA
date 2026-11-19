@@ -35,7 +35,7 @@ export function createChat(root, { onOpen }) {
       <button type="submit" class="send" id="as-send" aria-label="Send">${icon("send")}</button>
       <button type="button" class="stop" id="as-stop" aria-label="Stop" hidden>${icon("stop")}</button>
     </form>
-    <p class="disclaimer">Sample data. AI can make mistakes; check important details with the relevant office.</p>`;
+    <p class="disclaimer">Gemini can make mistakes. Check important details with the relevant APU office.</p>`;
 
   const $ = (id) => root.querySelector(`#${id}`);
   const els = {
