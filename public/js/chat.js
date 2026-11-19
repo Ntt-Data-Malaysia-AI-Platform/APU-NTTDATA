@@ -12,7 +12,7 @@ export function createChat(root, { onOpen }) {
       <span class="as-avatar">${icon("sparkle")}</span>
       <div class="as-title">
         <strong id="as-name">AI Assistant</strong>
-        <small><span class="live-dot"></span> Grounded in APU knowledge</small>
+        <small><span class="live-dot"></span> Grounded in official guidance</small>
       </div>
       <button type="button" class="icon-btn as-expand" id="as-expand" title="Wider panel" aria-label="Toggle wider assistant panel" aria-pressed="false">${icon("widen")}</button>
       <button type="button" class="icon-btn" id="as-new" title="New conversation" aria-label="New conversation">${icon("refresh")}</button>
@@ -35,7 +35,7 @@ export function createChat(root, { onOpen }) {
       <button type="submit" class="send" id="as-send" aria-label="Send">${icon("send")}</button>
       <button type="button" class="stop" id="as-stop" aria-label="Stop" hidden>${icon("stop")}</button>
     </form>
-    <p class="disclaimer">Gemini can make mistakes. Check important details with the relevant APU office.</p>`;
+    <p class="disclaimer">Gemini can make mistakes. Check important details with the relevant university office.</p>`;
 
   const $ = (id) => root.querySelector(`#${id}`);
   const els = {

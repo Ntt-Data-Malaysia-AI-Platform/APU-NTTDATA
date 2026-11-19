@@ -2,9 +2,9 @@ import { icon, PERSONA_ICONS } from "./icons.js";
 import { escapeHtml as e } from "./markdown.js";
 
 const PILLARS = [
-  { icon: "doc", title: "Grounded in APU knowledge", text: "Answers come from approved APU documents, with sources you can open." },
+  { icon: "doc", title: "Grounded in official guidance", text: "Answers come from approved university documents, with sources you can open." },
   { icon: "lock", title: "Right for your studies", text: "Each student type sees only the documents and records meant for it." },
-  { icon: "gemini", title: "Gemini on Google Cloud", text: "Built for Gemini on Vertex AI, in APU's own cloud project, designed for Malaysia's PDPA." },
+  { icon: "gemini", title: "Gemini on Google Cloud", text: "Built for Gemini on Vertex AI, in a secure university cloud project, designed for Malaysia's PDPA." },
   { icon: "globe", title: "Speaks your language", text: "Ask in English, Bahasa Melayu or Chinese and get answers in kind." },
 ];
 
@@ -14,9 +14,9 @@ export function renderLanding(root, cfg, { lastPersona }) {
   root.innerHTML = `
     <section class="hero">
       <div class="hero-copy">
-        <span class="kicker">${icon("gemini", "spark-icon")} NTT DATA × APU · Gemini for Students</span>
+        <span class="kicker">${icon("gemini", "spark-icon")} NTT DATA · Gemini for Students</span>
         <h1>Gemini AI for Education <span class="grad-text rainbow">Reimagined</span> <span class="hero-for">for Students</span></h1>
-        <p class="lead">Personal Gemini workspaces for prospective, current, PhD, international and Master's students, each with a live dashboard, one-click AI tools and an assistant that knows APU.</p>
+        <p class="lead">Personal Gemini workspaces for prospective, current, PhD, international and Master's students, each with a live dashboard, one-click AI tools and an assistant that knows your university.</p>
         <div class="hero-cta">
           <a class="btn btn-primary" href="#personas">Choose your student type ${icon("arrow")}</a>
           ${last ? `<a class="btn btn-ghost" href="#/${e(last.id)}" data-persona="${e(last.id)}"><span class="dot"></span>Continue as ${e(last.label)}</a>` : ""}
@@ -86,7 +86,7 @@ export function renderLanding(root, cfg, { lastPersona }) {
       <span>Delivered by</span>
       <span class="logo-badge"><img src="brand/ntt-data-logo-white.png" alt="NTT DATA" /></span>
       <span class="sep">·</span>
-      <span>Gemini AI for Education Reimagined – Students · Asia Pacific University</span>
+      <span>Gemini AI for Education Reimagined – Students · NTT DATA</span>
     </footer>`;
 
   // Smooth-scroll the in-page link without changing the route.

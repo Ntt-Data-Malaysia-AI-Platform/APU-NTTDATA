@@ -5,7 +5,7 @@ import { config } from "./config.js";
 /**
  * Single shared demo login. The session is a signed, HttpOnly cookie
  * (`user.expiry.signature`), so the server stays stateless on Cloud Run.
- * For production, replace this with APU single sign-on (e.g. Identity-Aware
+ * For production, replace this with the university single sign-on (e.g. Identity-Aware
  * Proxy with Microsoft Entra ID).
  */
 

@@ -186,7 +186,7 @@ app.listen(config.port, () => {
   const mode = config.demoMode
     ? "DEMO MODE (no model connected)"
     : `${config.model} on Vertex AI (${config.projectId}, ${config.region})`;
-  console.log(`APU GenAI assistant listening on :${config.port} - ${mode}`);
+  console.log(`Gemini for Students listening on :${config.port} - ${mode}`);
   if (config.usingDefaultLogin) {
     console.warn("Using the built-in demo login. Set APP_USERNAME and APP_PASSWORD for any shared deployment.");
   }

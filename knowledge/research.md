@@ -17,4 +17,4 @@ All research involving human participants, personal data or animals requires app
 Research data must be stored on university-approved storage, never on personal cloud accounts. Personal data must be handled in line with the Personal Data Protection Act 2010 (PDPA). Data management plans must state where data is stored, who can access it and how long it is kept.
 
 ## Publishing
-Researchers are encouraged to publish in Scopus- or Web of Science-indexed venues. Article processing charges for open access may be supported by the Research Office on application. Use your APU affiliation and ORCID iD on all publications.
+Researchers are encouraged to publish in Scopus- or Web of Science-indexed venues. Article processing charges for open access may be supported by the Research Office on application. Use your university affiliation and ORCID iD on all publications.

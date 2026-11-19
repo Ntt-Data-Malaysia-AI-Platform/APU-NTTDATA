@@ -1,5 +1,5 @@
 /* ==========================================================================
-   APU Gemini for Students: NTT DATA royal blue and white theme
+   NTT DATA Gemini for Students: NTT DATA royal blue and white theme
    Any element with data-persona gets that persona's three gradient stops
    (--g1..--g3); every colour below derives from them.
    ========================================================================== */
@@ -1409,7 +1409,7 @@ body[data-view="boot"] .topbar { display: none; }
 }
 .login-tagline .icon { width: 15px; height: 15px; fill: #fff; stroke: none; }
 
-/* APU mark and partner "×" on blue surfaces */
+/* Brand mark on blue surfaces */
 .topbar .brand-mark,
 .login-logos .brand-mark { color: var(--ntt-blue); background: #fff; box-shadow: 0 6px 16px -8px rgba(0, 0, 0, 0.45); }
 .login-x { color: rgba(255, 255, 255, 0.7); }

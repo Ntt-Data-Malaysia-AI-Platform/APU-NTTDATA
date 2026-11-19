@@ -89,7 +89,7 @@ export async function runChat(
     if (message.stop_reason === "refusal") {
       emit({
         type: "text",
-        text: `${wroteText ? "\n\n" : ""}Sorry, I can't help with that request. Please contact the relevant APU office directly.`,
+        text: `${wroteText ? "\n\n" : ""}Sorry, I can't help with that request. Please contact the relevant university office directly.`,
       });
       break;
     }

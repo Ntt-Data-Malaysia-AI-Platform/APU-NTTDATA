@@ -23,7 +23,7 @@ export const ACTIONS = {
         { name: "intake", label: "When would you like to start?", type: "text", placeholder: "e.g. next March" },
       ],
       prompt: (v) =>
-        `I'm a prospective student with ${v.qualification}. My interests: ${v.interests}. I'd like to start ${v.intake || "soon"}. Recommend the APU programmes that fit best, explain why, list the entry requirements I need, and give me the next steps to apply.`,
+        `I'm a prospective student with ${v.qualification}. My interests: ${v.interests}. I'd like to start ${v.intake || "soon"}. Recommend the programmes that fit best, explain why, list the entry requirements I need, and give me the next steps to apply.`,
     },
     {
       id: "visa",
@@ -35,7 +35,7 @@ export const ACTIONS = {
         { name: "level", label: "Programme level", type: "select", options: ["Foundation", "Diploma", "Degree", "Postgraduate"] },
       ],
       prompt: (v) =>
-        `I'm ${v.nationality} and want to study a ${v.level} programme at APU. Give me a step-by-step checklist for the student visa (EMGS) and the documents I need, with timings, as a numbered list.`,
+        `I'm ${v.nationality} and want to study a ${v.level} programme in Malaysia. Give me a step-by-step checklist for the student visa (EMGS) and the documents I need, with timings, as a numbered list.`,
     },
     {
       id: "compare",
@@ -47,7 +47,7 @@ export const ACTIONS = {
         { name: "b", label: "Second programme", type: "select", options: PROGRAMMES, value: PROGRAMMES[1] },
       ],
       prompt: (v) =>
-        `Compare ${v.a} and ${v.b} at APU in a table: duration, intakes, entry requirements, indicative fees and the kind of careers each leads to. Then say who each one suits best.`,
+        `Compare ${v.a} and ${v.b} in a table: duration, intakes, entry requirements, indicative fees and the kind of careers each leads to. Then say who each one suits best.`,
     },
     {
       id: "scholarship",
@@ -56,7 +56,7 @@ export const ACTIONS = {
       blurb: "See which scholarships your results could qualify for.",
       fields: [{ name: "results", label: "Your results", type: "textarea", placeholder: "e.g. SPM 7A 2B, active in robotics club", required: true }],
       prompt: (v) =>
-        `These are my results and activities: ${v.results}. Which APU scholarships could I be eligible for, roughly how much might they cover, and how do I apply?`,
+        `These are my results and activities: ${v.results}. Which scholarships could I be eligible for, roughly how much might they cover, and how do I apply?`,
     },
   ],
 

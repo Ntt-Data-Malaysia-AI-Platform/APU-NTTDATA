@@ -53,12 +53,12 @@ export async function runDemo(
   if (outcome.sources?.length) {
     emit({ type: "sources", sources: sources.list() });
     parts.push(
-      "**From APU's official guidance**\n\n" +
+      "**From official university guidance**\n\n" +
         outcome.sources.map((s) => `- **${s.section}**: ${firstSentences(s.text)} [${s.ref}]`).join("\n"),
     );
   } else {
     parts.push(
-      "I couldn't find this in the APU guidance available to you. Please contact the relevant APU office, or rephrase your question and I'll search again.",
+      "I couldn't find this in the university guidance available to you. Please contact the relevant university office, or rephrase your question and I'll search again.",
     );
   }
 

@@ -96,7 +96,7 @@ export function dashboardFor(id: PersonaId): Dashboard {
       const progs = programmes();
       const next = intakes[0];
       return {
-        greeting: "Find your future at APU",
+        greeting: "Find your future here",
         subtitle: "Explore programmes, check entry requirements and plan your application.",
         kpis: [
           { label: "Next intake", value: new Date(next.date).toLocaleDateString("en-GB", { day: "numeric", month: "short" }), detail: inDays(next.date), icon: "calendar", tone: "info" },
@@ -127,7 +127,7 @@ export function dashboardFor(id: PersonaId): Dashboard {
             centerValue: "RM 48.8k",
             centerLabel: "per year",
             note: "Estimate for a Malaysian student living near campus.",
-            ask: "Help me plan how to fund my first year at APU, including scholarships, PTPTN and instalments.",
+            ask: "Help me plan how to fund my first year of university, including scholarships, PTPTN and instalments.",
             segments: [
               { label: "Tuition", value: 32000, display: "RM 32,000" },
               { label: "Accommodation", value: 7200, display: "RM 7,200" },
@@ -157,9 +157,9 @@ export function dashboardFor(id: PersonaId): Dashboard {
             title: "Events for you",
             icon: "pin",
             items: [
-              { title: "Open day: campus tour and programme talks", meta: `${shortDate(daysFromNow(12))} · 10:00–16:00 · Main campus`, badge: "Register", tone: "good", ask: "What happens at the APU open day and how do I register?" },
+              { title: "Open day: campus tour and programme talks", meta: `${shortDate(daysFromNow(12))} · 10:00–16:00 · Main campus`, badge: "Register", tone: "good", ask: "What happens at the open day and how do I register?" },
               { title: "Virtual info session: computing degrees", meta: `${shortDate(daysFromNow(5))} · 20:00 · Online`, badge: "Online", tone: "info", ask: "What will the virtual info session on computing degrees cover?" },
-              { title: "Scholarship clinic", meta: `${shortDate(daysFromNow(19))} · 14:00 · Admissions Office`, badge: "Free", tone: "info", ask: "How do APU merit scholarships work and what should I bring to the scholarship clinic?" },
+              { title: "Scholarship clinic", meta: `${shortDate(daysFromNow(19))} · 14:00 · Admissions Office`, badge: "Free", tone: "info", ask: "How do merit scholarships work and what should I bring to the scholarship clinic?" },
             ],
           },
         ],

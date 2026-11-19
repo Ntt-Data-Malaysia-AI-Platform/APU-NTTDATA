@@ -5,7 +5,7 @@ owner: Centre for Teaching and Learning
 ---
 
 ## Principles
-APU encourages responsible use of generative AI tools to support learning. Students remain responsible for the work they submit, and AI use must be honest, acknowledged and allowed by the assessment brief.
+The university encourages responsible use of generative AI tools to support learning. Students remain responsible for the work they submit, and AI use must be honest, acknowledged and allowed by the assessment brief.
 
 ## What students may do
 Unless the assessment brief says otherwise, students may use GenAI tools to: explain concepts, generate practice questions, get feedback on grammar and structure, and brainstorm ideas. Students must acknowledge any GenAI use in a short statement at the end of the submission, naming the tool and how it was used.

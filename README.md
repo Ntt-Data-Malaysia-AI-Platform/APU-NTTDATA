@@ -1,21 +1,21 @@
-# APU Gemini for Students
+# NTT DATA Gemini for Students
 
-**Gemini AI for Education Reimagined – Students.** Personal AI workspaces for every kind of student at Asia Pacific University, delivered by NTT DATA.
+**Gemini AI for Education Reimagined – Students.** Personal AI workspaces for every kind of student, delivered by NTT DATA.
 
-**Live demo:** https://ntt-data-malaysia-ai-platform.github.io/APU-NTTDATA/ (static demo mode)
+**Live site:** https://ntt-data-malaysia-ai-platform.github.io/APU-NTTDATA/
 
 - **Sign-in screen:** every page requires a login. The built-in demo login is set in `server/config.ts`; override it with `APP_USERNAME` / `APP_PASSWORD`.
 - **Landing page:** introduces the platform; you choose one of five student types.
 - **Student workspace:** a live dashboard (timetable, fees, milestones, Student Pass renewal, credits…) plus four **one-click AI tools** per student type. Click any dashboard item marked *Ask AI* to get help with it.
-- **Docked assistant:** a chat panel on the right (a drawer on phones) grounded in APU documents, with sources. Answers read from the top down. Switch student type from the dropdown at the top right.
+- **Docked assistant:** a chat panel on the right (a drawer on phones) grounded in official university documents, with sources. Answers read from the top down. Switch student type from the dropdown at the top right.
 
 | Student type | Assistant | What it can do |
 | --- | --- | --- |
-| Prospective student | APU Admissions Assistant | Programmes, entry requirements, intakes, scholarships, visas |
-| Current student | APU Student Assistant | The student's own fees, timetable, results and attendance; study planner, concept tutor |
-| PhD student | APU Research Candidate Assistant | Candidature milestones, supervision prep, funding, ethics, publications, literature search |
-| International student | APU International Student Assistant | Student Pass expiry and renewal steps, attendance rules, insurance, settling in |
-| Master's student | APU Postgraduate Assistant | Modules and credits, dissertation steps, weekend classes, research methods, careers |
+| Prospective student | Admissions Assistant | Programmes, entry requirements, intakes, scholarships, visas |
+| Current student | Student Assistant | The student's own fees, timetable, results and attendance; study planner, concept tutor |
+| PhD student | Research Candidate Assistant | Candidature milestones, supervision prep, funding, ethics, publications, literature search |
+| International student | International Student Assistant | Student Pass expiry and renewal steps, attendance rules, insurance, settling in |
+| Master's student | Postgraduate Assistant | Modules and credits, dissertation steps, weekend classes, research methods, careers |
 
 Switching student type starts a new conversation and changes the assistant's role, its tools and **which documents it may read**. For example, only PhD and Master's students can read the postgraduate rules.
 
@@ -46,7 +46,7 @@ Claude Opus 5.5 on Vertex AI (auth: Cloud Run service account, no API keys)
 - Every persona gets the same guardrails: answer from sources, reply in the user's language (English, Malay or Chinese), escalate distress to counselling, and never write graded work for students.
 - If Claude declines a request, the SDK retries it on a fallback model (`CLAUDE_FALLBACK_MODEL`), because Vertex AI has no server-side fallback.
 
-> **Everything in `knowledge/` and the personal records in `server/tools.ts` is sample data.** Replace it with APU's official documents and real system integrations before any real use.
+> **Everything in `knowledge/` and the personal records in `server/tools.ts` is sample data.** Replace it with the university's official documents and real system integrations before any real use.
 
 ## Run locally
 
@@ -132,7 +132,7 @@ A server-free build of the app runs on GitHub Pages: the same landing page, dash
 
 ## Making it real
 
-- **Knowledge:** replace `knowledge/*.md` with approved APU documents. Set `audience` and `owner` in each file's front matter (see `knowledge/README.md`). For large document sets, swap the BM25 search for Vertex AI Search or a vector index.
+- **Knowledge:** replace `knowledge/*.md` with approved university documents. Set `audience` and `owner` in each file's front matter (see `knowledge/README.md`). For large document sets, swap the BM25 search for Vertex AI Search or a vector index.
 - **Personal data:** replace the demo functions at the bottom of `server/tools.ts` with calls to the student information system, LMS, ITSM and research management APIs.
-- **Sign-in:** put the service behind APU single sign-on (for example, Identity-Aware Proxy with Microsoft Entra ID). Then derive the persona and user from the signed-in identity instead of the dropdown, which is for demos.
+- **Sign-in:** put the service behind the university single sign-on (for example, Identity-Aware Proxy with Microsoft Entra ID). Then derive the persona and user from the signed-in identity instead of the dropdown, which is for demos.
 - **Hardening:** the browser sends the conversation history, and the server validates its size and shape but trusts its content. Add per-user rate limits and conversation logging for audit before going live.

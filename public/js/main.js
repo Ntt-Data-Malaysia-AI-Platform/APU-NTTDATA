@@ -99,7 +99,7 @@ function showLogin(notice) {
   els.loginNotice.hidden = !notice;
   els.loginNotice.textContent = notice ?? "";
   els.loginPass.value = "";
-  document.title = "Sign in · APU Gemini for Students";
+  document.title = "Sign in · NTT DATA Gemini for Students";
   window.scrollTo(0, 0);
   (els.loginUser.value ? els.loginPass : els.loginUser).focus();
 }
@@ -165,7 +165,7 @@ function showLanding() {
   els.fab.hidden = true;
   closeAssistant();
   renderLanding(els.landing, cfg, { lastPersona: recall() });
-  document.title = "APU Gemini for Students";
+  document.title = "NTT DATA Gemini for Students";
   window.scrollTo(0, 0);
 }
 
@@ -187,7 +187,7 @@ async function showWorkspace(persona) {
   els.picker.hidden = false;
   els.fab.hidden = false;
   els.select.value = persona.id;
-  document.title = `${persona.label} · APU Gemini for Students`;
+  document.title = `${persona.label} · NTT DATA Gemini for Students`;
   chat.setPersona(persona);
   window.scrollTo(0, 0);
   await renderWorkspace(els.main, persona, {

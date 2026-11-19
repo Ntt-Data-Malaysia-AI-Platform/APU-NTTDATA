@@ -21,7 +21,7 @@ const TOOL_DEFS: Record<string, Tool> = {
   search_apu_knowledge: {
     name: "search_apu_knowledge",
     description:
-      "Search APU's knowledge base (programmes, admissions, fees, regulations, visas, postgraduate rules, campus services and GenAI policy). Returns numbered sources; cite them as [n]. Only documents this student's type may read are searched. Call it again with different keywords if the first results miss.",
+      "Search the university knowledge base (programmes, admissions, fees, regulations, visas, postgraduate rules, campus services and GenAI policy). Returns numbered sources; cite them as [n]. Only documents this student's type may read are searched. Call it again with different keywords if the first results miss.",
     eager_input_streaming: true,
     input_schema: {
       type: "object",
@@ -76,7 +76,7 @@ export function toolsFor(persona: Persona): Tool[] {
 }
 
 export const TOOL_STATUS: Record<string, string> = {
-  search_apu_knowledge: "Searching the APU knowledge base",
+  search_apu_knowledge: "Searching the university knowledge base",
   get_my_student_record: "Checking your student record",
   get_my_phd_record: "Checking your candidature record",
   get_my_visa_status: "Checking your Student Pass status",

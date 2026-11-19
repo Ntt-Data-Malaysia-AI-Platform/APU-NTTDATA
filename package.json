@@ -2,7 +2,7 @@
   "name": "apu-genai-assistant",
   "version": "0.1.0",
   "private": true,
-  "description": "APU GenAI assistant: one governed AI platform with persona-specific assistants, powered by Claude on Vertex AI.",
+  "description": "NTT DATA Gemini for Students: one governed AI platform with persona-specific assistants, powered by Claude on Vertex AI.",
   "type": "module",
   "engines": {
     "node": ">=20"

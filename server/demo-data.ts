@@ -27,7 +27,7 @@ function nextWeekday(name: string): string {
 
 export function programmes() {
   return [
-    { name: "BSc (Hons) Computer Science", level: "Degree", duration: "3 years", intakes: "Jan, Mar, May, Jul, Sep, Nov", entry: "2 STPM principal passes incl. Mathematics, or APU Foundation (CGPA 2.0)", fee: "~RM 30k–35k per year" },
+    { name: "BSc (Hons) Computer Science", level: "Degree", duration: "3 years", intakes: "Jan, Mar, May, Jul, Sep, Nov", entry: "2 STPM principal passes incl. Mathematics, or Foundation in Computing (CGPA 2.0)", fee: "~RM 30k–35k per year" },
     { name: "BSc (Hons) Software Engineering", level: "Degree", duration: "3 years", intakes: "Jan, May, Sep", entry: "2 A-Level passes incl. Mathematics, or related diploma (CGPA 2.5)", fee: "~RM 30k–35k per year" },
     { name: "BSc (Hons) Data Science and Business Analytics", level: "Degree", duration: "3 years", intakes: "Mar, Jul, Nov", entry: "2 STPM principal passes incl. Mathematics", fee: "~RM 29k–34k per year" },
     { name: "Foundation in Computing", level: "Foundation", duration: "1 year", intakes: "Every two months", entry: "5 SPM credits incl. Mathematics and English", fee: "~RM 18k–22k" },
