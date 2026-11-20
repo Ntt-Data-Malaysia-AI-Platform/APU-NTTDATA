@@ -1,6 +1,6 @@
 # NTT DATA Gemini for Students
 
-**Gemini AI for Education Reimagined – Students.** Personal AI workspaces for every kind of student, delivered by NTT DATA.
+**Higher Education Reimagined – Students.** Personal AI workspaces for every kind of student, delivered by NTT DATA.
 
 **Live site:** https://ntt-data-malaysia-ai-platform.github.io/APU-NTTDATA/
 

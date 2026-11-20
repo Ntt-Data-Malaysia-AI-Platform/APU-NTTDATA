@@ -15,7 +15,7 @@ export function renderLanding(root, cfg, { lastPersona }) {
     <section class="hero">
       <div class="hero-copy">
         <span class="kicker">${icon("gemini", "spark-icon")} NTT DATA · Gemini for Students</span>
-        <h1>Gemini AI for Education <span class="grad-text rainbow">Reimagined</span> <span class="hero-for">for Students</span></h1>
+        <h1>Higher Education <span class="grad-text rainbow">Reimagined</span> <span class="hero-for">for Students</span></h1>
         <p class="lead">Personal Gemini workspaces for prospective, current, PhD, international and Master's students, each with a live dashboard, one-click AI tools and an assistant that knows your university.</p>
         <div class="hero-cta">
           <a class="btn btn-primary" href="#personas">Choose your student type ${icon("arrow")}</a>
@@ -86,7 +86,7 @@ export function renderLanding(root, cfg, { lastPersona }) {
       <span>Delivered by</span>
       <span class="logo-badge"><img src="brand/ntt-data-logo-white.png" alt="NTT DATA" /></span>
       <span class="sep">·</span>
-      <span>Gemini AI for Education Reimagined – Students · NTT DATA</span>
+      <span>Higher Education Reimagined – Students · NTT DATA</span>
     </footer>`;
 
   // Smooth-scroll the in-page link without changing the route.
